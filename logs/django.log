@@ -470,3 +470,5 @@ ERROR "GET /vessels/ HTTP/1.1" 500 91577
 INFO "GET /donnees/ HTTP/1.1" 200 30510
 INFO "GET /documents/ HTTP/1.1" 200 22058
 INFO "GET /statistiques/ HTTP/1.1" 200 24884
+INFO Watching for file changes with StatReloader
+INFO Watching for file changes with StatReloader
