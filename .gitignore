@@ -19,9 +19,6 @@ __pycache__/
 # Media files
 media/
 
-# Static files
-static/
-
 # Database files
 *.sqlite3
 *.db
