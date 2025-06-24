@@ -1,0 +1,483 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Manifest Management{% endblock %}
+
+{% block content %}
+<div class="space-y-4 md:space-y-6">
+    <!-- Header avec meilleure responsivité -->
+    <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+        <div class="px-4 py-4 sm:px-6 sm:py-5">
+            <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0">
+                <div class="flex items-center flex-1">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-ship text-white text-xl sm:text-2xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-4 sm:ml-5 min-w-0 flex-1">
+                        <h1 class="text-lg sm:text-xl font-bold text-gray-900 truncate">
+                            Dashboard Manifest
+                        </h1>
+                        <p class="text-sm text-gray-500 mt-1">
+                            Bienvenue {{ user.username }} - Système IA intégré
+                        </p>
+                    </div>
+                </div>
+                <div class="flex-shrink-0">
+                    <div class="text-xs sm:text-sm text-gray-500 text-right">
+                        Dernière mise à jour: {{ "now"|date:"d/m/Y H:i" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques principales avec grille responsive améliorée -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <!-- Documents PDF -->
+        <div class="bg-white overflow-hidden shadow-sm rounded-lg hover:shadow-md transition-shadow duration-200">
+            <div class="p-4 sm:p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-file-pdf text-red-600 text-lg sm:text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-3 sm:ml-4 min-w-0 flex-1">
+                        <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">Documents PDF</p>
+                        <p class="text-lg sm:text-xl font-bold text-gray-900">{{ total_documents }}</p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="flex items-center justify-between text-xs sm:text-sm">
+                        <span class="text-green-600 font-medium">{{ processed_documents }} traités</span>
+                        <span class="text-gray-500">({{ processing_percentage }}%)</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+                        <div class="bg-green-600 h-1.5 rounded-full transition-all duration-300" style="width: {{ processing_percentage }}%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-2 sm:px-5 sm:py-3">
+                <a href="{% url 'documents' %}" class="text-xs sm:text-sm font-medium text-primary-700 hover:text-primary-900 transition-colors">
+                    Gérer les documents →
+                </a>
+            </div>
+        </div>
+
+        <!-- Entrées IA -->
+        <div class="bg-white overflow-hidden shadow-sm rounded-lg hover:shadow-md transition-shadow duration-200">
+            <div class="p-4 sm:p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-robot text-blue-600 text-lg sm:text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-3 sm:ml-4 min-w-0 flex-1">
+                        <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">Entrées IA</p>
+                        <p class="text-lg sm:text-xl font-bold text-gray-900">{{ ai_extracted_entries }}</p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="flex items-center justify-between text-xs sm:text-sm">
+                        <span class="text-blue-600 font-medium">{{ ai_extraction_percentage }}%</span>
+                        <span class="text-gray-500">du total</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-2 sm:px-5 sm:py-3">
+                <a href="{% url 'donnees' %}" class="text-xs sm:text-sm font-medium text-primary-700 hover:text-primary-900 transition-colors">
+                    Voir les données →
+                </a>
+            </div>
+        </div>
+
+        <!-- Navires -->
+        <div class="bg-white overflow-hidden shadow-sm rounded-lg hover:shadow-md transition-shadow duration-200">
+            <div class="p-4 sm:p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-ship text-green-600 text-lg sm:text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-3 sm:ml-4 min-w-0 flex-1">
+                        <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">Navires</p>
+                        <p class="text-lg sm:text-xl font-bold text-gray-900">{{ total_vessels }}</p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="text-xs sm:text-sm text-gray-600">
+                        {{ total_entries }} entrées totales
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-2 sm:px-5 sm:py-3">
+                <a href="{% url 'vessels' %}" class="text-xs sm:text-sm font-medium text-primary-700 hover:text-primary-900 transition-colors">
+                    Gérer les navires →
+                </a>
+            </div>
+        </div>
+
+        <!-- Poids total -->
+        <div class="bg-white overflow-hidden shadow-sm rounded-lg hover:shadow-md transition-shadow duration-200">
+            <div class="p-4 sm:p-5">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-weight-hanging text-purple-600 text-lg sm:text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="ml-3 sm:ml-4 min-w-0 flex-1">
+                        <p class="text-xs sm:text-sm font-medium text-gray-500 truncate">Poids total</p>
+                        <p class="text-lg sm:text-xl font-bold text-gray-900">
+                            {% if total_weight %}
+                                {{ total_weight|floatformat:0 }} kg
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="text-xs sm:text-sm text-gray-600">
+                        {% if total_volume %}
+                            Volume: {{ total_volume|floatformat:0 }} m³
+                        {% else %}
+                            Volume: N/A
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 px-4 py-2 sm:px-5 sm:py-3">
+                <a href="{% url 'statistiques' %}" class="text-xs sm:text-sm font-medium text-primary-700 hover:text-primary-900 transition-colors">
+                    Voir statistiques →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section principale avec layout responsive -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
+        <!-- Colonne principale (2/3 sur xl) -->
+        <div class="xl:col-span-2 space-y-4 md:space-y-6">
+            <!-- Statut des traitements -->
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                    <h3 class="text-base sm:text-lg font-medium text-gray-900">Statut des traitements</h3>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="text-center p-3 bg-green-50 rounded-lg">
+                            <div class="text-xl sm:text-2xl font-bold text-green-600">{{ processed_documents }}</div>
+                            <div class="text-xs sm:text-sm text-green-700 mt-1">Traités</div>
+                        </div>
+                        <div class="text-center p-3 bg-yellow-50 rounded-lg">
+                            <div class="text-xl sm:text-2xl font-bold text-yellow-600">{{ pending_documents }}</div>
+                            <div class="text-xs sm:text-sm text-yellow-700 mt-1">En attente</div>
+                        </div>
+                        <div class="text-center p-3 bg-red-50 rounded-lg">
+                            <div class="text-xl sm:text-2xl font-bold text-red-600">{{ error_documents }}</div>
+                            <div class="text-xs sm:text-sm text-red-700 mt-1">Erreurs</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Barre de progression globale -->
+                    <div class="mt-6">
+                        <div class="flex justify-between text-sm text-gray-600 mb-2">
+                            <span>Progression globale</span>
+                            <span class="font-medium">{{ processing_percentage }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500" style="width: {{ processing_percentage }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphiques avec layout responsive -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+                <!-- Entrées par mois -->
+                <div class="bg-white shadow-sm rounded-lg">
+                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                        <h3 class="text-sm sm:text-base font-medium text-gray-900">Entrées par mois</h3>
+                    </div>
+                    <div class="p-4 sm:p-6">
+                        <div class="h-48 sm:h-64">
+                            <canvas id="monthlyChart" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents traités par jour -->
+                <div class="bg-white shadow-sm rounded-lg">
+                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                        <h3 class="text-sm sm:text-base font-medium text-gray-900">Documents traités (7j)</h3>
+                    </div>
+                    <div class="p-4 sm:p-6">
+                        <div class="h-48 sm:h-64">
+                            <canvas id="dailyChart" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar droite (1/3 sur xl) -->
+        <div class="space-y-4 md:space-y-6">
+            <!-- Top navires -->
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                    <h3 class="text-sm sm:text-base font-medium text-gray-900">Top navires</h3>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <div class="space-y-3">
+                        {% for vessel in top_vessels %}
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center min-w-0 flex-1">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                                    <i class="fas fa-ship text-blue-600 text-xs"></i>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-sm font-medium text-gray-900 truncate">{{ vessel.vessel__name }}</div>
+                                    <div class="text-xs text-gray-500">{{ vessel.vessel__flag }}</div>
+                                </div>
+                            </div>
+                            <div class="text-right flex-shrink-0 ml-2">
+                                <div class="text-sm font-bold text-gray-900">{{ vessel.entries_count }}</div>
+                                <div class="text-xs text-gray-500">entrées</div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="text-center text-gray-500 py-6">
+                            <i class="fas fa-ship text-gray-300 text-2xl mb-2"></i>
+                            <div class="text-sm">Aucune donnée</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents récents -->
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                    <h3 class="text-sm sm:text-base font-medium text-gray-900">Documents récents</h3>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    {% for doc in recent_documents %}
+                    <div class="px-4 py-3 sm:px-6 sm:py-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center min-w-0 flex-1">
+                                <div class="flex-shrink-0 mr-3">
+                                    <i class="fas fa-file-pdf text-red-500"></i>
+                                </div>
+                                <div class="min-w-0 flex-1">
+                                    <p class="text-sm font-medium text-gray-900 truncate">{{ doc.nom }}</p>
+                                    <p class="text-xs text-gray-500">{{ doc.date_ajout|date:"d/m H:i" }}</p>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 ml-2">
+                                {% if doc.processing_status == 'completed' %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <i class="fas fa-check w-3 h-3 mr-1"></i>
+                                        OK
+                                    </span>
+                                {% elif doc.processing_status == 'processing' %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                        <i class="fas fa-spinner fa-spin w-3 h-3 mr-1"></i>
+                                        ...
+                                    </span>
+                                {% elif doc.processing_status == 'error' %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <i class="fas fa-times w-3 h-3 mr-1"></i>
+                                        ERR
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        <i class="fas fa-clock w-3 h-3 mr-1"></i>
+                                        ATT
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="px-4 py-6 sm:px-6 text-center text-gray-500">
+                        <i class="fas fa-file text-gray-300 text-2xl mb-2"></i>
+                        <div class="text-sm">Aucun document</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides avec layout responsive amélioré -->
+    <div class="bg-white shadow-sm rounded-lg">
+        <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+            <h3 class="text-base sm:text-lg font-medium text-gray-900">Actions rapides</h3>
+        </div>
+        <div class="p-4 sm:p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="{% url 'upload_pdf' %}" class="group relative bg-gradient-to-br from-blue-50 to-blue-100 p-4 sm:p-6 rounded-lg border border-blue-200 hover:border-blue-300 hover:shadow-md transition-all duration-200">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                <i class="fas fa-upload text-white"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 min-w-0 flex-1">
+                            <h4 class="text-sm font-medium text-blue-900">Importer PDF</h4>
+                            <p class="text-xs text-blue-700 mt-1">Nouveau document</p>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{% url 'statistiques' %}" class="group relative bg-gradient-to-br from-green-50 to-green-100 p-4 sm:p-6 rounded-lg border border-green-200 hover:border-green-300 hover:shadow-md transition-all duration-200">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                <i class="fas fa-chart-bar text-white"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 min-w-0 flex-1">
+                            <h4 class="text-sm font-medium text-green-900">Statistiques</h4>
+                            <p class="text-xs text-green-700 mt-1">Analyses avancées</p>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{% url 'donnees' %}" class="group relative bg-gradient-to-br from-purple-50 to-purple-100 p-4 sm:p-6 rounded-lg border border-purple-200 hover:border-purple-300 hover:shadow-md transition-all duration-200">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                <i class="fas fa-search text-white"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 min-w-0 flex-1">
+                            <h4 class="text-sm font-medium text-purple-900">Explorer</h4>
+                            <p class="text-xs text-purple-700 mt-1">Rechercher données</p>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="{% url 'vessels' %}" class="group relative bg-gradient-to-br from-indigo-50 to-indigo-100 p-4 sm:p-6 rounded-lg border border-indigo-200 hover:border-indigo-300 hover:shadow-md transition-all duration-200">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                <i class="fas fa-ship text-white"></i>
+                            </div>
+                        </div>
+                        <div class="ml-3 min-w-0 flex-1">
+                            <h4 class="text-sm font-medium text-indigo-900">Navires</h4>
+                            <p class="text-xs text-indigo-700 mt-1">Gérer la flotte</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Configuration responsive pour Chart.js
+Chart.defaults.responsive = true;
+Chart.defaults.maintainAspectRatio = false;
+
+// Graphique des entrées par mois
+const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+const monthlyData = {{ monthly_entries|safe }};
+const monthlyLabels = monthlyData.map(item => item.month || 'N/A');
+const monthlyValues = monthlyData.map(item => item.count);
+
+new Chart(monthlyCtx, {
+    type: 'line',
+    data: {
+        labels: monthlyLabels,
+        datasets: [{
+            label: 'Entrées',
+            data: monthlyValues,
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderColor: 'rgb(59, 130, 246)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: 'rgb(59, 130, 246)',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            pointRadius: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+
+// Graphique des documents traités par jour
+const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+const dailyData = {{ daily_processing|safe }};
+const dailyLabels = dailyData.map(item => {
+    const date = new Date(item.day);
+    return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' });
+});
+const dailyValues = dailyData.map(item => item.count);
+
+new Chart(dailyCtx, {
+    type: 'bar',
+    data: {
+        labels: dailyLabels,
+        datasets: [{
+            label: 'Documents traités',
+            data: dailyValues,
+            backgroundColor: 'rgba(34, 197, 94, 0.6)',
+            borderColor: 'rgb(34, 197, 94)',
+            borderWidth: 1,
+            borderRadius: 4,
+            borderSkipped: false,
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                }
+            },
+            x: {
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}
