@@ -472,3 +472,98 @@ INFO "GET /documents/ HTTP/1.1" 200 22058
 INFO "GET /statistiques/ HTTP/1.1" 200 24884
 INFO Watching for file changes with StatReloader
 INFO Watching for file changes with StatReloader
+INFO Watching for file changes with StatReloader
+INFO Watching for file changes with StatReloader
+INFO "GET / HTTP/1.1" 302 0
+INFO "GET /login/?next=/ HTTP/1.1" 200 9433
+INFO "POST /login/?next=/ HTTP/1.1" 302 0
+INFO "GET / HTTP/1.1" 200 42328
+INFO "GET /chatbot/advanced/ HTTP/1.1" 200 30948
+INFO "POST /api/chatbot/ HTTP/1.1" 200 56
+INFO "POST /api/chatbot/ HTTP/1.1" 200 56
+INFO /home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "POST /api/chatbot/ HTTP/1.1" 200 64
+INFO "POST /api/chatbot/ HTTP/1.1" 200 64
+INFO "POST /api/chatbot/ HTTP/1.1" 200 64
+INFO /home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /chatbot/advanced/ HTTP/1.1" 200 30948
+INFO "POST /api/chatbot/ HTTP/1.1" 200 64
+INFO /home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "POST /api/chatbot/ HTTP/1.1" 200 64
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "POST /api/chatbot/ HTTP/1.1" 200 64
+INFO /home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "POST /api/chatbot/ HTTP/1.1" 200 434
+INFO "POST /api/chatbot/ HTTP/1.1" 200 64
+INFO /home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "POST /api/chatbot/ HTTP/1.1" 200 613
+INFO "POST /api/chatbot/ HTTP/1.1" 200 906
+ERROR Internal Server Error: /vessels/
+Traceback (most recent call last):
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_app/views.py", line 218, in vessels
+    return render(request, 'manifest_app/vessels.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: manifest_app/vessels.html
+ERROR "GET /vessels/ HTTP/1.1" 500 94554
+ERROR Internal Server Error: /consignes/
+Traceback (most recent call last):
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_app/views.py", line 242, in consignes
+    return render(request, 'manifest_app/consignes.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: manifest_app/consignes.html
+ERROR "GET /consignes/ HTTP/1.1" 500 94426
+INFO "GET / HTTP/1.1" 200 42328
+INFO "GET / HTTP/1.1" 200 43173
+INFO "GET /chatbot/advanced/ HTTP/1.1" 200 38280
+INFO "GET /chatbot/advanced/ HTTP/1.1" 200 37677
+INFO "GET / HTTP/1.1" 200 42570
+INFO "GET / HTTP/1.1" 200 40748
+INFO "GET /utilisateurs/ HTTP/1.1" 200 16603
+INFO "GET /donnees/ HTTP/1.1" 200 33050
+INFO "GET /documents/ HTTP/1.1" 200 24598
+INFO "GET /statistiques/ HTTP/1.1" 200 27424
+INFO "GET /chatbot/advanced/ HTTP/1.1" 200 35855
+INFO "GET / HTTP/1.1" 200 40748
