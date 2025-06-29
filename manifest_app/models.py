@@ -65,3 +65,20 @@ class ManifestEntry(models.Model):
     
     def __str__(self):
         return f"{self.vessel.name} - {self.date}"
+
+
+class ChatMessage(models.Model):
+    """
+    Modèle pour stocker l'historique des conversations du chatbot
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    response = models.TextField()
+    intent = models.JSONField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.created_at.strftime('%d/%m/%Y %H:%M')}"

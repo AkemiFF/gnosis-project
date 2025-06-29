@@ -1,22 +1,19 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
+from django.http import JsonResponse, HttpResponse
+from django.core.paginator import Paginator
+from django.db.models import Q, Count, Sum
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 import json
 from datetime import datetime, timedelta
-
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
-from django.db.models import Avg, Count, Q, Sum
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
-
+from .models import Vessel, Shipper, Consigne, Voyage, PDFDocument, ManifestEntry, ChatMessage
 from .forms import PDFUploadForm
-from .models import (Consigne, ManifestEntry, PDFDocument, Shipper, Vessel,
-                     Voyage)
 from .services.ai_service import AIService
 from .services.pdf_manager import PDFManager
-
+from .services.chatbot_service import ChatbotService
 
 def login_view(request):
     if request.method == 'POST':
@@ -383,3 +380,117 @@ def pdf_status(request, pdf_id):
         'processed': pdf_doc.processed,
         'entries_count': ManifestEntry.objects.filter(pdf_document=pdf_doc).count()
     })
+
+@login_required
+def chatbot_view(request):
+    """
+    Vue principale du chatbot
+    """
+    # Récupérer l'historique des conversations de l'utilisateur
+    chat_history = ChatMessage.objects.filter(user=request.user)[:20]
+    
+    # Obtenir les questions suggérées
+    try:
+        chatbot_service = ChatbotService()
+        suggested_questions = chatbot_service.get_suggested_questions()
+    except Exception as e:
+        suggested_questions = [
+            "Quels sont les navires les plus actifs ?",
+            "Combien de documents ont été traités ?",
+            "Quels produits sont les plus importés ?",
+        ]
+    
+    context = {
+        'chat_history': chat_history,
+        'suggested_questions': suggested_questions,
+    }
+    return render(request, 'manifest_app/chatbot.html', context)
+
+@login_required
+def chatbot_advanced_view(request):
+    """
+    Vue pour le chatbot avancé avec génération de code
+    """
+    # Récupérer l'historique des conversations de l'utilisateur
+    chat_history = ChatMessage.objects.filter(user=request.user)[:10]
+    
+    # Obtenir les questions suggérées
+    try:
+        chatbot_service = ChatbotService()
+        suggested_questions = chatbot_service.get_suggested_questions()
+    except Exception as e:
+        suggested_questions = [
+            "Combien de navires sont enregistrés ?",
+            "Quels sont les 5 navires les plus actifs ?",
+            "Quel est le poids total des cargaisons ?",
+            "Quels pays ont le plus de navires ?",
+        ]
+    
+    context = {
+        'chat_history': chat_history,
+        'suggested_questions': suggested_questions,
+    }
+    return render(request, 'manifest_app/chatbot_advanced.html', context)
+
+@login_required
+@require_POST
+def chatbot_api(request):
+    """
+    API endpoint pour le chatbot
+    """
+    try:
+        data = json.loads(request.body)
+        user_message = data.get('message', '').strip()
+        
+        if not user_message:
+            return JsonResponse({
+                'success': False,
+                'error': 'Message vide'
+            })
+        
+        # Traiter la requête avec le service chatbot
+        chatbot_service = ChatbotService()
+        result = chatbot_service.process_chat_query(user_message)
+        
+        if result['success']:
+            # Sauvegarder la conversation
+            ChatMessage.objects.create(
+                user=request.user,
+                message=user_message,
+                response=result['response'],
+                intent=result.get('intent', {})
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'response': result['response'],
+                'intent': result.get('intent', {}),
+                'data': result.get('data', {})
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'error': result.get('error', 'Erreur inconnue')
+            })
+    
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Format JSON invalide'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Erreur serveur: {str(e)}'
+        })
+
+@login_required
+def clear_chat_history(request):
+    """
+    Efface l'historique de chat de l'utilisateur
+    """
+    if request.method == 'POST':
+        ChatMessage.objects.filter(user=request.user).delete()
+        messages.success(request, 'Historique de chat effacé avec succès.')
+    
+    return redirect('chatbot')

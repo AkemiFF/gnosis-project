@@ -17,4 +17,9 @@ urlpatterns = [
     path('shippers/', views.shippers, name='shippers'),
     path('consignes/', views.consignes, name='consignes'),
     path('voyages/', views.voyages, name='voyages'),
+    # Chatbot URLs
+    path('chatbot/', views.chatbot_view, name='chatbot'),
+    path('api/chatbot/', views.chatbot_api, name='chatbot_api'),
+    path('chatbot/clear/', views.clear_chat_history, name='clear_chat_history'),
+    path('chatbot/advanced/', views.chatbot_advanced_view, name='chatbot_advanced'),
 ]

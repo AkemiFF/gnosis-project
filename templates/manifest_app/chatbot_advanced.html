@@ -1,0 +1,382 @@
+{% extends 'base.html' %}
+
+{% block title %}Assistant IA Avancé - Manifest Management{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto space-y-4 md:space-y-6">
+    <!-- Header -->
+    <div class="bg-white shadow-sm rounded-lg">
+        <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center mr-3 sm:mr-4">
+                        <i class="fas fa-robot text-white text-lg sm:text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-bold text-gray-900">Assistant IA Avancé</h1>
+                        <p class="text-xs sm:text-sm text-gray-600">Génération automatique de code pour vos recherches</p>
+                    </div>
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="toggleDebugMode()" class="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100" title="Mode debug">
+                        <i class="fas fa-code text-sm"></i>
+                    </button>
+                    <button onclick="clearChat()" class="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100" title="Effacer l'historique">
+                        <i class="fas fa-trash text-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Chat Container -->
+        <div class="lg:col-span-3">
+            <div class="bg-white shadow-sm rounded-lg flex flex-col" style="height: 70vh;">
+                <!-- Messages Area -->
+                <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4">
+                    <!-- Message de bienvenue -->
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <div class="bg-blue-50 rounded-lg p-3">
+                                <p class="text-sm text-blue-900">
+                                    🤖 Assistant IA Avancé activé ! Je génère automatiquement du code Python pour analyser vos données de manifeste.
+                                    <br><br>
+                                    Posez-moi des questions comme :
+                                    <br>• "Combien de navires français sont enregistrés ?"
+                                    <br>• "Quels sont les produits les plus lourds ?"
+                                    <br>• "Statistiques par pays"
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historique des messages -->
+                    {% for chat in chat_history reversed %}
+                    <!-- Message utilisateur -->
+                    <div class="flex items-start space-x-3 justify-end">
+                        <div class="flex-1 max-w-xs sm:max-w-md">
+                            <div class="bg-primary-500 text-white rounded-lg p-3">
+                                <p class="text-sm">{{ chat.message }}</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1 text-right">{{ chat.created_at|date:"d/m H:i" }}</p>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Réponse IA -->
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 max-w-xs sm:max-w-md lg:max-w-lg">
+                            <div class="bg-gray-100 rounded-lg p-3">
+                                <p class="text-sm text-gray-900 whitespace-pre-wrap">{{ chat.response }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Input Area -->
+                <div class="border-t border-gray-200 p-4">
+                    <form id="chatForm" class="flex space-x-3">
+                        <div class="flex-1">
+                            <input type="text" 
+                                   id="messageInput" 
+                                   placeholder="Posez votre question (ex: Combien de navires français ?)" 
+                                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-sm"
+                                   autocomplete="off">
+                        </div>
+                        <button type="submit" 
+                                id="sendButton"
+                                class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar avec questions suggérées et debug -->
+        <div class="lg:col-span-1 space-y-4">
+            <!-- Questions suggérées -->
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="px-4 py-3 border-b border-gray-200">
+                    <h3 class="text-sm font-medium text-gray-900">Questions suggérées</h3>
+                </div>
+                <div class="p-4">
+                    <div class="space-y-2">
+                        {% for question in suggested_questions %}
+                        <button onclick="sendSuggestedQuestion('{{ question|escapejs }}')" 
+                                class="w-full text-left text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md transition-colors">
+                            {{ question }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mode Debug -->
+            <div id="debugPanel" class="bg-white shadow-sm rounded-lg hidden">
+                <div class="px-4 py-3 border-b border-gray-200">
+                    <h3 class="text-sm font-medium text-gray-900">
+                        <i class="fas fa-code mr-2"></i>Mode Debug
+                    </h3>
+                </div>
+                <div class="p-4">
+                    <div id="debugContent" class="text-xs text-gray-600">
+                        Activez une recherche pour voir le code généré
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aide -->
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="px-4 py-3 border-b border-gray-200">
+                    <h3 class="text-sm font-medium text-gray-900">
+                        <i class="fas fa-info-circle mr-2"></i>Aide
+                    </h3>
+                </div>
+                <div class="p-4">
+                    <div class="text-xs text-gray-600 space-y-2">
+                        <p><strong>Comment ça marche :</strong></p>
+                        <ol class="list-decimal list-inside space-y-1">
+                            <li>Vous posez une question</li>
+                            <li>L'IA génère du code Python</li>
+                            <li>Le code s'exécute automatiquement</li>
+                            <li>Les résultats sont formatés en réponse</li>
+                        </ol>
+                        <p class="mt-2"><strong>Exemples :</strong></p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>"Top 5 navires actifs"</li>  
+                            <li>"Poids total par pays"</li>
+                            <li>"Documents traités aujourd'hui"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let debugMode = false;
+const chatMessages = document.getElementById('chatMessages');
+const chatForm = document.getElementById('chatForm');
+const messageInput = document.getElementById('messageInput');
+const sendButton = document.getElementById('sendButton');
+const debugPanel = document.getElementById('debugPanel');
+const debugContent = document.getElementById('debugContent');
+
+// Toggle debug mode
+function toggleDebugMode() {
+    debugMode = !debugMode;
+    if (debugMode) {
+        debugPanel.classList.remove('hidden');
+    } else {
+        debugPanel.classList.add('hidden');
+    }
+}
+
+// Auto-scroll vers le bas
+function scrollToBottom() {
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Ajouter un message à la conversation
+function addMessage(message, isUser = false, isLoading = false, debugInfo = null) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `flex items-start space-x-3 ${isUser ? 'justify-end' : ''}`;
+    
+    if (isUser) {
+        messageDiv.innerHTML = `
+            <div class="flex-1 max-w-xs sm:max-w-md">
+                <div class="bg-primary-500 text-white rounded-lg p-3">
+                    <p class="text-sm">${message}</p>
+                </div>
+                <p class="text-xs text-gray-500 mt-1 text-right">Maintenant</p>
+            </div>
+            <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user text-white text-sm"></i>
+                </div>
+            </div>
+        `;
+    } else {
+        let debugHtml = '';
+        if (debugInfo && debugMode) {
+            debugHtml = `
+                <div class="mt-2 p-2 bg-gray-50 rounded border-l-4 border-blue-400">
+                    <details class="text-xs">
+                        <summary class="cursor-pointer text-blue-600 font-medium">Voir le code généré</summary>
+                        <pre class="mt-2 text-gray-700 whitespace-pre-wrap">${debugInfo.code || 'N/A'}</pre>
+                    </details>
+                </div>
+            `;
+        }
+        
+        messageDiv.innerHTML = `
+            <div class="flex-shrink-0">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                </div>
+            </div>
+            <div class="flex-1 max-w-xs sm:max-w-md lg:max-w-lg">
+                <div class="bg-gray-100 rounded-lg p-3">
+                    ${isLoading ? 
+                        '<div class="flex items-center space-x-2"><i class="fas fa-cogs fa-spin text-blue-500"></i><span class="text-sm text-gray-600">Génération et exécution du code...</span></div>' :
+                        `<p class="text-sm text-gray-900 whitespace-pre-wrap">${message}</p>`
+                    }
+                </div>
+                ${debugHtml}
+            </div>
+        `;
+    }
+    
+    chatMessages.appendChild(messageDiv);
+    scrollToBottom();
+    return messageDiv;
+}
+
+// Envoyer un message
+async function sendMessage(message) {
+    if (!message.trim()) return;
+    
+    // Ajouter le message utilisateur
+    addMessage(message, true);
+    
+    // Ajouter un indicateur de chargement
+    const loadingMessage = addMessage('', false, true);
+    
+    // Désactiver l'input
+    sendButton.disabled = true;
+    messageInput.disabled = true;
+    
+    try {
+        const response = await fetch('{% url "chatbot_api" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ message: message })
+        });
+        
+        const data = await response.json();
+        
+        // Supprimer l'indicateur de chargement
+        loadingMessage.remove();
+        
+        if (data.success) {
+            // Afficher les informations de debug si activé
+            if (debugMode && data.generated_code) {
+                debugContent.innerHTML = `
+                    <div class="space-y-2">
+                        <div>
+                            <strong>Code généré :</strong>
+                            <pre class="mt-1 p-2 bg-gray-100 rounded text-xs overflow-x-auto">${data.generated_code}</pre>
+                        </div>
+                        ${data.raw_results ? `
+                        <div>
+                            <strong>Résultats bruts :</strong>
+                            <pre class="mt-1 p-2 bg-gray-100 rounded text-xs overflow-x-auto">${JSON.stringify(data.raw_results, null, 2)}</pre>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            addMessage(data.response, false, false, {
+                code: data.generated_code,
+                results: data.raw_results
+            });
+        } else {
+            addMessage(`❌ Erreur: ${data.error}`, false);
+            
+            if (debugMode && data.code) {
+                debugContent.innerHTML = `
+                    <div class="text-red-600">
+                        <strong>Code qui a échoué :</strong>
+                        <pre class="mt-1 p-2 bg-red-50 rounded text-xs overflow-x-auto">${data.code}</pre>
+                    </div>
+                `;
+            }
+        }
+    } catch (error) {
+        loadingMessage.remove();
+        addMessage('❌ Erreur de connexion. Veuillez réessayer.', false);
+        console.error('Erreur:', error);
+    } finally {
+        // Réactiver l'input
+        sendButton.disabled = false;
+        messageInput.disabled = false;
+        messageInput.focus();
+    }
+}
+
+// Envoyer une question suggérée
+function sendSuggestedQuestion(question) {
+    messageInput.value = question;
+    sendMessage(question);
+    messageInput.value = '';
+}
+
+// Gérer la soumission du formulaire
+chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const message = messageInput.value.trim();
+    if (message) {
+        sendMessage(message);
+        messageInput.value = '';
+    }
+});
+
+// Effacer le chat
+function clearChat() {
+    if (confirm('Êtes-vous sûr de vouloir effacer l\'historique de chat ?')) {
+        fetch('{% url "clear_chat_history" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        }).then(() => {
+            location.reload();
+        });
+    }
+}
+
+// Fonction pour obtenir le CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Focus sur l'input au chargement
+messageInput.focus();
+
+// Scroll initial vers le bas
+scrollToBottom();
+</script>
+{% endblock %}
