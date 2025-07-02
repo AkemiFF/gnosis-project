@@ -841,3 +841,5 @@ INFO "GET /vessels/ HTTP/1.1" 200 34015
 INFO "GET / HTTP/1.1" 200 40958
 INFO "GET /chatbot/advanced/ HTTP/1.1" 200 36130
 INFO "POST /api/chatbot/ HTTP/1.1" 200 700
+INFO /home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_project/urls.py changed, reloading.
+INFO Watching for file changes with StatReloader
