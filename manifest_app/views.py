@@ -1,20 +1,64 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from django.http import JsonResponse, HttpResponse
-from django.core.paginator import Paginator
-from django.db.models import Q, Count, Sum
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 import json
+import mimetypes
 from datetime import datetime, timedelta
-from .models import Vessel, Shipper, Consigne, Voyage, PDFDocument, ManifestEntry, ChatMessage
-from .forms import PDFUploadForm
-from .services.ai_service import AIService
-from .services.pdf_manager import PDFManager
-from .services.chatbot_service import ChatbotService
 
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.db.models import Avg, Count, Q, Sum
+from django.http import Http404, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+
+from .forms import PDFUploadForm, UserCreateForm
+from .models import (ChatMessage, Consigne, ManifestEntry, PDFDocument,
+                     Shipper, Vessel, Voyage)
+from .services.ai_service import AIService
+from .services.chatbot_service import ChatbotService
+from .services.pdf_manager import PDFManager
+
+
+@login_required
+def view_pdf(request, pdf_id):
+    """Afficher un PDF dans le navigateur"""
+    pdf_doc = get_object_or_404(PDFDocument, id=pdf_id)
+    
+    try:
+        # Ouvrir le fichier PDF
+        with open(pdf_doc.file.path, 'rb') as pdf_file:
+            response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+            response['Content-Disposition'] = f'inline; filename="{pdf_doc.nom}.pdf"'
+            return response
+    except FileNotFoundError:
+        raise Http404("Le fichier PDF n'a pas été trouvé.")
+    
+@login_required
+def delete_user(request, user_id):
+    """Supprimer un utilisateur"""
+    if not request.user.is_superuser:
+        messages.error(request, 'Vous n\'avez pas les permissions pour supprimer des utilisateurs.')
+        return redirect('utilisateurs')
+    
+    user_to_delete = get_object_or_404(User, id=user_id)
+    
+    # Empêcher la suppression de son propre compte
+    if user_to_delete == request.user:
+        messages.error(request, 'Vous ne pouvez pas supprimer votre propre compte.')
+        return redirect('utilisateurs')
+    
+    if request.method == 'POST':
+        username = user_to_delete.username
+        user_to_delete.delete()
+        messages.success(request, f'Utilisateur "{username}" supprimé avec succès.')
+        return redirect('utilisateurs')
+    
+    return render(request, 'manifest_app/confirm_delete_user.html', {
+        'user_to_delete': user_to_delete
+    })
+    
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -31,6 +75,23 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+@login_required
+def create_user(request):
+    """Créer un nouvel utilisateur"""
+    if not request.user.is_superuser:
+        messages.error(request, 'Vous n\'avez pas les permissions pour créer des utilisateurs.')
+        return redirect('utilisateurs')
+    
+    if request.method == 'POST':
+        form = UserCreateForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, f'Utilisateur "{user.username}" créé avec succès!')
+            return redirect('utilisateurs')
+    else:
+        form = UserCreateForm()
+    
+    return render(request, 'manifest_app/create_user.html', {'form': form})
 @login_required
 def home(request):
     # Statistiques générales
@@ -207,16 +268,105 @@ def utilisateurs(request):
 
 @login_required
 def vessels(request):
-    vessels = Vessel.objects.all()
-    paginator = Paginator(vessels, 10)
+    """Liste des navires avec recherche et filtres"""
+    search_query = request.GET.get('search', '')
+    flag_filter = request.GET.get('flag', '')
+    sort_by = request.GET.get('sort', 'entries_count')
+    
+    vessels = Vessel.objects.annotate(
+        entries_count=Count('manifestentry'),
+        total_weight=Sum('manifestentry__poids'),
+        total_volume=Sum('manifestentry__volume'),
+        last_activity=Count('manifestentry__date')
+    )
+    
+    # Filtres
+    if search_query:
+        vessels = vessels.filter(
+            Q(name__icontains=search_query) |
+            Q(flag__icontains=search_query)
+        )
+    
+    if flag_filter:
+        vessels = vessels.filter(flag__icontains=flag_filter)
+    
+    # Tri
+    if sort_by == 'name':
+        vessels = vessels.order_by('name')
+    elif sort_by == 'flag':
+        vessels = vessels.order_by('flag', 'name')
+    elif sort_by == 'date':
+        vessels = vessels.order_by('-created_at')
+    else:  # entries_count par défaut
+        vessels = vessels.order_by('-entries_count', 'name')
+    
+    # Pagination
+    paginator = Paginator(vessels, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
+    # Statistiques pour la page
+    total_vessels = Vessel.objects.count()
+    total_entries = ManifestEntry.objects.count()
+    countries = Vessel.objects.values_list('flag', flat=True).distinct().order_by('flag')
+    
+    # Top pays par nombre de navires
+    top_countries = Vessel.objects.values('flag').annotate(
+        vessel_count=Count('id')
+    ).order_by('-vessel_count')[:5]
+    
     context = {
         'page_obj': page_obj,
+        'search_query': search_query,
+        'flag_filter': flag_filter,
+        'sort_by': sort_by,
+        'total_vessels': total_vessels,
+        'total_entries': total_entries,
+        'countries': countries,
+        'top_countries': top_countries,
     }
+    
     return render(request, 'manifest_app/vessels.html', context)
 
+@login_required
+def vessel_detail(request, vessel_id):
+    """Détail d'un navire"""
+    vessel = get_object_or_404(Vessel, id=vessel_id)
+    
+    # Entrées de manifeste pour ce navire
+    entries = ManifestEntry.objects.filter(vessel=vessel).select_related('pdf_document').order_by('-date')
+    
+    # Statistiques
+    stats = entries.aggregate(
+        total_entries=Count('id'),
+        total_weight=Sum('poids'),
+        total_volume=Sum('volume'),
+        avg_weight=Avg('poids'),
+        avg_volume=Avg('volume')
+    )
+    
+    # Voyages
+    voyages = Voyage.objects.filter(vessel=vessel).order_by('-date_depart')[:10]
+    
+    # Produits les plus transportés
+    top_products = entries.values('produits').annotate(
+        count=Count('id')
+    ).order_by('-count')[:10]
+    
+    # Pagination des entrées
+    paginator = Paginator(entries, 20)
+    page_number = request.GET.get('page')
+    entries_page = paginator.get_page(page_number)
+    
+    context = {
+        'vessel': vessel,
+        'stats': stats,
+        'voyages': voyages,
+        'top_products': top_products,
+        'entries_page': entries_page,
+    }
+    
+    return render(request, 'manifest_app/vessel_detail.html', context)
 @login_required
 def shippers(request):
     shippers = Shipper.objects.all()

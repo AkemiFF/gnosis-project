@@ -1,5 +1,9 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
 from .models import PDFDocument
+
 
 class PDFUploadForm(forms.ModelForm):
     start_page = forms.IntegerField(
@@ -42,3 +46,75 @@ class PDFUploadForm(forms.ModelForm):
             raise forms.ValidationError("La page de fin doit être supérieure ou égale à la page de début.")
         
         return cleaned_data
+
+class UserCreateForm(UserCreationForm):
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={
+            'class': 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500',
+            'placeholder': 'Email'
+        })
+    )
+    first_name = forms.CharField(
+        max_length=30,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500',
+            'placeholder': 'Prénom'
+        })
+    )
+    last_name = forms.CharField(
+        max_length=30,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500',
+            'placeholder': 'Nom'
+        })
+    )
+    is_staff = forms.BooleanField(
+        required=False,
+        initial=True,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded'
+        }),
+        label='Accès administrateur'
+    )
+    is_superuser = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={
+            'class': 'h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded'
+        }),
+        label='Super administrateur'
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', 'is_staff', 'is_superuser')
+        widgets = {
+            'username': forms.TextInput(attrs={
+                'class': 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500',
+                'placeholder': 'Nom d\'utilisateur'
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].widget.attrs.update({
+            'class': 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500',
+            'placeholder': 'Mot de passe'
+        })
+        self.fields['password2'].widget.attrs.update({
+            'class': 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500',
+            'placeholder': 'Confirmer le mot de passe'
+        })
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.email = self.cleaned_data['email']
+        user.first_name = self.cleaned_data['first_name']
+        user.last_name = self.cleaned_data['last_name']
+        user.is_staff = self.cleaned_data['is_staff']
+        user.is_superuser = self.cleaned_data['is_superuser']
+        if commit:
+            user.save()
+        return user
