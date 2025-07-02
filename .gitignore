@@ -16,8 +16,8 @@ __pycache__/
 .vscode/
 .idea/
 
-# Media files
-media/
+# # Media files
+# media/
 
 # Database files
 *.sqlite3
