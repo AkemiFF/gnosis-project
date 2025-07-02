@@ -5,19 +5,19 @@
             <div class="flex items-center">
                 <!-- Mobile menu button -->
                 <button onclick="toggleMobileMenu()" 
-                        class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500 transition-colors duration-200">
+                        class="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#38276b] transition-colors duration-200">
                     <span class="sr-only">Ouvrir le menu</span>
                     <i class="fas fa-bars text-lg sm:text-xl"></i>
                 </button>
                 
                 <!-- Logo and title -->
                 <div class="flex-shrink-0 flex items-center ml-2 lg:ml-0">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center mr-2 sm:mr-3 shadow-sm">
-                        <i class="fas fa-ship text-white text-sm sm:text-lg"></i>
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 mr-2 sm:mr-3 flex items-center justify-center">
+                        <img src="/media/images/logo-gnosis.png" alt="Gnosis Logo" class="w-full h-full object-contain rounded-lg shadow-sm">
                     </div>
                     <div>
-                        <h1 class="text-lg sm:text-xl font-bold text-gray-900">Manifest</h1>
-                        <p class="hidden sm:block text-xs text-gray-500">Management System</p>
+                        <h1 class="text-lg sm:text-xl font-bold text-gray-900">Gnosis</h1>
+                        <p class="hidden sm:block text-xs text-gray-500">Manifest System</p>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                 </div>
                 
                 <!-- Notifications -->
-                <button class="relative p-2 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors duration-200">
+                <button class="relative p-2 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#38276b] transition-colors duration-200">
                     <span class="sr-only">Voir les notifications</span>
                     <i class="fas fa-bell text-sm sm:text-base"></i>
                     <!-- Notification badge -->
@@ -41,7 +41,7 @@
                 <!-- User menu -->
                 <div class="flex items-center space-x-2 sm:space-x-3">
                     <div class="flex items-center space-x-2">
-                        <div class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center shadow-sm">
+                        <div class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-[#38276b] to-[#5462a3] rounded-full flex items-center justify-center shadow-sm">
                             <i class="fas fa-user text-white text-xs sm:text-sm"></i>
                         </div>
                         <div class="hidden sm:block">
@@ -52,7 +52,7 @@
                     
                     <!-- Logout button -->
                     <a href="{% url 'logout' %}" 
-                       class="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500 transition-colors duration-200" 
+                       class="text-gray-500 hover:text-gray-700 p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#38276b] transition-colors duration-200" 
                        title="Se déconnecter">
                         <i class="fas fa-sign-out-alt text-sm sm:text-base"></i>
                     </a>
