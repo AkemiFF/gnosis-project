@@ -17,10 +17,10 @@
                         <p class="text-sm text-gray-600">Gestion des comptes utilisateurs</p>
                     </div>
                 </div>
-                <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                <a href="{% url 'create_user' %}" class="bg-[#38276b] hover:bg-[#5462a3] text-white px-4 py-2 rounded-md text-sm font-medium">
                     <i class="fas fa-plus mr-2"></i>
                     Nouvel utilisateur
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -72,12 +72,17 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
-                                <button class="text-indigo-600 hover:text-indigo-900">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="text-red-600 hover:text-red-900">
+                                {% if user != request.user %}
+                                <a href="{% url 'delete_user' user.id %}" 
+                                   class="text-red-600 hover:text-red-900 transition-colors duration-200"
+                                   title="Supprimer l'utilisateur">
                                     <i class="fas fa-trash"></i>
-                                </button>
+                                </a>
+                                {% else %}
+                                <span class="text-gray-400" title="Vous ne pouvez pas supprimer votre propre compte">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                {% endif %}
                             </div>
                         </td>
                     </tr>
