@@ -843,3 +843,757 @@ INFO "GET /chatbot/advanced/ HTTP/1.1" 200 36130
 INFO "POST /api/chatbot/ HTTP/1.1" 200 700
 INFO /home/akemi/Bureau/Gnosis/last/django-manifest-app/manifest_project/urls.py changed, reloading.
 INFO Watching for file changes with StatReloader
+INFO "GET /media/images/logo-gnosis.png HTTP/1.1" 304 0
+WARNING Not Found: /favicon.ico
+WARNING "GET /favicon.ico HTTP/1.1" 404 8573
+INFO Watching for file changes with StatReloader
+INFO "GET /admin/ HTTP/1.1" 200 10154
+INFO "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+WARNING Not Found: /favicon.ico
+WARNING "GET /favicon.ico HTTP/1.1" 404 8573
+INFO "GET /admin/manifest_app/manifestentry/ HTTP/1.1" 200 19216
+INFO "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO "GET /admin/manifest_app/manifestentry/11/change/ HTTP/1.1" 200 19804
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO "GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+INFO "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+INFO "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 304 0
+INFO "GET /admin/manifest_app/manifestentry/ HTTP/1.1" 200 19216
+INFO "GET /admin/ HTTP/1.1" 200 10154
+INFO "GET / HTTP/1.1" 200 40958
+INFO "GET /media/images/logo-gnosis.png HTTP/1.1" 304 0
+INFO "GET /media/images/logo-gnosis-2.png HTTP/1.1" 304 0
+INFO "GET /documents/ HTTP/1.1" 200 25170
+INFO "GET /donnees/ HTTP/1.1" 200 33325
+INFO Watching for file changes with StatReloader
+INFO "GET /documents/4/process/ HTTP/1.1" 302 0
+INFO "GET /login/?next=/documents/4/process/ HTTP/1.1" 200 15024
+INFO "POST /login/?next=/documents/4/process/ HTTP/1.1" 302 0
+INFO "GET / HTTP/1.1" 200 40958
+INFO "GET /documents/ HTTP/1.1" 200 25170
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 28698
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/models.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/models.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET / HTTP/1.1" 302 0
+INFO "GET /login/?next=/ HTTP/1.1" 200 15024
+INFO "GET /media/images/logo-gnosis-2.png HTTP/1.1" 304 0
+INFO "GET / HTTP/1.1" 302 0
+INFO "GET /login/?next=/ HTTP/1.1" 200 15024
+INFO "GET /login/?next=/ HTTP/1.1" 200 15024
+INFO "GET /media/images/logo-gnosis-2.png HTTP/1.1" 200 67739
+INFO "GET /media/images/logo-gnosis-2.png HTTP/1.1" 200 67739
+INFO "POST /login/?next=/ HTTP/1.1" 302 0
+INFO "GET / HTTP/1.1" 200 42238
+INFO "GET /media/images/logo-gnosis.png HTTP/1.1" 304 0
+INFO "GET / HTTP/1.1" 200 42238
+INFO "GET /chatbot/advanced/ HTTP/1.1" 200 38378
+INFO "POST /api/chatbot/ HTTP/1.1" 200 431
+ERROR Internal Server Error: /statistiques/
+Traceback (most recent call last):
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/Bureau/Gnosis/v3/manifest_app/views.py", line 211, in statistiques
+    return render(request, 'manifest_app/statistiques.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 199, in render
+    len_values = len(values)
+                 ^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1561, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 747, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1379, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Invalid field name(s) given in select_related: 'voyage'. Choices are: pdf_document, vessel, container, shipper, consigne
+ERROR "GET /statistiques/ HTTP/1.1" 500 222353
+WARNING Not Found: /favicon.ico
+WARNING "GET /favicon.ico HTTP/1.1" 404 8573
+INFO "GET /documents/ HTTP/1.1" 200 27755
+INFO "GET /documents/ HTTP/1.1" 200 27755
+INFO Watching for file changes with StatReloader
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 31273
+INFO "GET /documents/5/view/ HTTP/1.1" 200 146871
+INFO Watching for file changes with StatReloader
+ERROR Internal Server Error: /donnees/
+Traceback (most recent call last):
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/Bureau/Gnosis/v3/manifest_app/views.py", line 254, in donnees
+    return render(request, 'manifest_app/donnees.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 199, in render
+    len_values = len(values)
+                 ^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1561, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 747, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1379, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Invalid field name(s) given in select_related: 'voyage'. Choices are: pdf_document, vessel, container, shipper, consigne
+ERROR "GET /donnees/ HTTP/1.1" 500 225458
+INFO "GET /documents/ HTTP/1.1" 200 30335
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 33863
+INFO Watching for file changes with StatReloader
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 36441
+INFO "POST /documents/7/process/ HTTP/1.1" 200 296
+INFO "GET /documents/ HTTP/1.1" 200 35833
+INFO "GET /admin/ HTTP/1.1" 200 10154
+INFO "GET /admin/manifest_app/manifestentry/ HTTP/1.1" 200 19696
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/admin.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/admin.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/admin.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/admin.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/admin.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /admin/manifest_app/manifestentry/ HTTP/1.1" 200 20667
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/containercontent/ HTTP/1.1" 200 11729
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11675
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11675
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/containercontent/ HTTP/1.1" 200 11729
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/services/ai_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 39347
+INFO "POST /documents/8/process/ HTTP/1.1" 200 296
+INFO "GET /documents/ HTTP/1.1" 200 38742
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/services/ai_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/services/ai_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 41470
+INFO "POST /documents/9/process/ HTTP/1.1" 200 296
+INFO "GET /documents/ HTTP/1.1" 200 40855
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/services/ai_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 41466
+INFO "POST /documents/10/process/ HTTP/1.1" 200 296
+INFO "GET /documents/ HTTP/1.1" 200 40858
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/models.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 41471
+INFO "GET /admin/manifest_app/containercontent/ HTTP/1.1" 200 11729
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11675
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/shipper/ HTTP/1.1" 200 11661
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11675
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/consigne/ HTTP/1.1" 200 11668
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "POST /documents/11/process/ HTTP/1.1" 200 296
+INFO "GET /documents/ HTTP/1.1" 200 40862
+INFO Watching for file changes with StatReloader
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 41798
+INFO "POST /documents/12/process/ HTTP/1.1" 200 296
+INFO "GET /documents/ HTTP/1.1" 200 41192
+INFO "GET /admin/manifest_app/consigne/ HTTP/1.1" 200 13818
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/containercontent/ HTTP/1.1" 200 12780
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 15229
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/models.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO Watching for file changes with StatReloader
+INFO "POST /admin/manifest_app/container/ HTTP/1.1" 200 12232
+INFO "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+INFO "POST /admin/manifest_app/container/ HTTP/1.1" 302 0
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11822
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO "GET /admin/manifest_app/consigne/ HTTP/1.1" 200 13818
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "POST /admin/manifest_app/consigne/ HTTP/1.1" 200 11593
+INFO "POST /admin/manifest_app/consigne/ HTTP/1.1" 302 0
+INFO "GET /admin/manifest_app/consigne/ HTTP/1.1" 200 11814
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 42134
+INFO "POST /documents/13/process/ HTTP/1.1" 200 296
+INFO "GET /documents/ HTTP/1.1" 200 41527
+INFO "GET /admin/manifest_app/consigne/ HTTP/1.1" 200 13441
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/consigne/3/change/ HTTP/1.1" 200 13117
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/containercontent/ HTTP/1.1" 200 11729
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11675
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/services/ai_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 42462
+INFO "POST /documents/14/process/ HTTP/1.1" 200 296
+INFO "GET /documents/ HTTP/1.1" 200 41856
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11675
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11675
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11675
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/containercontent/ HTTP/1.1" 200 11729
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/consigne/ HTTP/1.1" 200 13441
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 11675
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /documents/upload/ HTTP/1.1" 200 17426
+INFO "POST /documents/upload/ HTTP/1.1" 302 0
+INFO "GET /documents/ HTTP/1.1" 200 42464
+INFO "POST /documents/15/process/ HTTP/1.1" 200 300
+INFO "GET /documents/ HTTP/1.1" 200 41858
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 16998
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+ERROR Internal Server Error: /donnees/
+Traceback (most recent call last):
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/Bureau/Gnosis/v3/manifest_app/views.py", line 254, in donnees
+    return render(request, 'manifest_app/donnees.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 199, in render
+    len_values = len(values)
+                 ^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/paginator.py", line 191, in __len__
+    return len(self.object_list)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/query.py", line 382, in __len__
+    self._fetch_all()
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/query.py", line 1928, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1561, in execute_sql
+    sql, params = self.as_sql()
+                  ^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 747, in as_sql
+    extra_select, order_by, group_by = self.pre_sql_setup(
+                                       ^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 84, in pre_sql_setup
+    self.setup_query(with_col_aliases=with_col_aliases)
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 73, in setup_query
+    self.select, self.klass_info, self.annotation_col_map = self.get_select(
+                                                            ^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 279, in get_select
+    related_klass_infos = self.get_related_selections(select, select_mask)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1379, in get_related_selections
+    raise FieldError(
+django.core.exceptions.FieldError: Invalid field name(s) given in select_related: 'voyage'. Choices are: pdf_document, vessel, container, shipper, consigne
+ERROR "GET /donnees/ HTTP/1.1" 500 225321
+WARNING Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 8684
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/views.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /donnees/ HTTP/1.1" 200 33803
+INFO Watching for file changes with StatReloader
+WARNING Not Found: /containers/
+WARNING "GET /containers/ HTTP/1.1" 404 8573
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/urls.py changed, reloading.
+INFO Watching for file changes with StatReloader
+ERROR Internal Server Error: /containers/
+Traceback (most recent call last):
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/urls/base.py", line 71, in reverse
+    extra, resolver = resolver.namespace_dict[ns]
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^
+KeyError: 'manifest_app'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/Bureau/Gnosis/v3/manifest_app/views.py", line 282, in containers
+    return render(request, 'manifest_app/containers.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 243, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/urls/base.py", line 82, in reverse
+    raise NoReverseMatch("%s is not a registered namespace" % key)
+django.urls.exceptions.NoReverseMatch: 'manifest_app' is not a registered namespace
+ERROR "GET /containers/ HTTP/1.1" 500 244044
+INFO "GET /containers/ HTTP/1.1" 200 49531
+ERROR Internal Server Error: /containers/17/
+Traceback (most recent call last):
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/urls/base.py", line 71, in reverse
+    extra, resolver = resolver.namespace_dict[ns]
+                      ~~~~~~~~~~~~~~~~~~~~~~~^^^^
+KeyError: 'manifest_app'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/contrib/auth/decorators.py", line 60, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/Bureau/Gnosis/v3/manifest_app/views.py", line 305, in container_detail
+    return render(request, 'manifest_app/container_detail.html', context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/backends/django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 1008, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/base.py", line 969, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/template/defaulttags.py", line 480, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=current_app)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/akemi/anaconda3/envs/django/lib/python3.12/site-packages/django/urls/base.py", line 82, in reverse
+    raise NoReverseMatch("%s is not a registered namespace" % key)
+django.urls.exceptions.NoReverseMatch: 'manifest_app' is not a registered namespace
+ERROR "GET /containers/17/ HTTP/1.1" 500 191785
+INFO "GET /containers/17/ HTTP/1.1" 200 25262
+INFO "GET /containers/ HTTP/1.1" 200 49531
+INFO "GET /containers/9/ HTTP/1.1" 200 25086
+INFO "GET /containers/9/ HTTP/1.1" 200 25465
+INFO "GET /containers/ HTTP/1.1" 200 49918
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/views.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/urls.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/urls.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /containers/ HTTP/1.1" 200 49918
+INFO "GET /containers/?search=&type=&status=&vessel=2 HTTP/1.1" 200 22088
+INFO "GET /containers/?search=&type=&status=&vessel=4 HTTP/1.1" 200 22088
+INFO "GET /containers/?search=&type=&status=&vessel= HTTP/1.1" 200 49918
+INFO "GET /containers/?search=&type=&status=&vessel=7 HTTP/1.1" 200 49926
+INFO "GET /containers/?search=&type=&status=&vessel=7 HTTP/1.1" 200 59727
+INFO "GET /containers/17/ HTTP/1.1" 200 28460
+INFO "GET /containers/ HTTP/1.1" 200 61338
+INFO "GET /containers/9/ HTTP/1.1" 200 28272
+INFO "GET /containers/ HTTP/1.1" 200 61338
+INFO "GET /containers/17/ HTTP/1.1" 200 28460
+INFO "GET /containers/ HTTP/1.1" 200 61338
+INFO "GET /containers/?search=LAs&type=&status=&vessel= HTTP/1.1" 200 61341
+INFO "GET /containers/?search=ABDUL&type=&status=&vessel= HTTP/1.1" 200 40119
+INFO "GET /containers/17/ HTTP/1.1" 200 28460
+INFO "GET /containers/ HTTP/1.1" 200 61338
+INFO "GET /donnees/ HTTP/1.1" 200 34182
+INFO "GET /donnees/?page=4 HTTP/1.1" 200 22021
+INFO "GET /containers/ HTTP/1.1" 200 61338
+INFO "GET /chatbot/advanced/ HTTP/1.1" 200 40692
+INFO "POST /api/chatbot/ HTTP/1.1" 200 582
+INFO "POST /api/chatbot/ HTTP/1.1" 200 486
+INFO "POST /api/chatbot/ HTTP/1.1" 200 826
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "POST /api/chatbot/ HTTP/1.1" 200 62
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "POST /api/chatbot/ HTTP/1.1" 200 62
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "POST /api/chatbot/ HTTP/1.1" 200 1972
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/services/chatbot_service.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /utilisateurs/ HTTP/1.1" 200 17179
+INFO "GET / HTTP/1.1" 200 43849
+INFO "GET /vessels/ HTTP/1.1" 200 39216
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/views.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO "GET /vessels/ HTTP/1.1" 200 39216
+INFO "GET /vessels/ HTTP/1.1" 200 39216
+INFO "GET /utilisateurs/ HTTP/1.1" 200 17179
+INFO "GET /containers/ HTTP/1.1" 200 61338
+INFO "GET /containers/17/ HTTP/1.1" 200 28460
