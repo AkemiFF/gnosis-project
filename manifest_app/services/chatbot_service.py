@@ -10,7 +10,7 @@ from django.conf import settings
 from django.db.models import Avg, Count, Max, Min, Q, Sum
 from openai import OpenAI
 
-from ..models import ManifestEntry, PDFDocument, Vessel, Voyage
+from ..models import *
 
 
 class ChatbotService:
@@ -36,20 +36,65 @@ class ChatbotService:
                     "fields": ["id", "name", "flag", "created_at"],
                     "description": "Navires avec nom et pavillon"
                 },
-                "ManifestEntry": {
-                    "fields": ["id", "vessel", "produits", "poids", "volume", "date", "page", "pdf_document"],
-                    "description": "Entrées de manifeste avec produits, poids, volume",
+                "Shipper": {
+                    "fields": ["id", "name", "adresse", "created_at"],
+                    "description": "Expéditeurs des marchandises"
+                },
+                "Consigne": {
+                    "fields": ["id", "name", "adresse", "created_at"],
+                    "description": "Destinataires ou consignataires"
+                },
+                "PDFDocument": {
+                    "fields": [
+                        "id", "nom", "nom_serveur", "nombre_page", "date_ajout", "file",
+                        "processed", "processing_status", "ai_results", "start_page", "end_page"
+                    ],
+                    "description": "Documents PDF analysés"
+                },
+                "Container": {
+                    "fields": [
+                        "id", "numero", "type_container", "vessel", "shipper", "consigne", "pdf_document", "page",
+                        "poids_brut", "poids_net", "poids_tare", "volume",
+                        "longueur", "largeur", "hauteur",
+                        "statut", "port_chargement", "port_dechargement",
+                        "scelle_douane", "scelle_transporteur", "created_at"
+                    ],
+                    "description": "Containers maritimes avec leurs caractéristiques",
                     "relations": {
                         "vessel": "Vessel",
+                        "shipper": "Shipper",
+                        "consigne": "Consigne",
                         "pdf_document": "PDFDocument"
                     }
                 },
-                "PDFDocument": {
-                    "fields": ["id", "nom", "nombre_page", "date_ajout", "processed", "processing_status"],
-                    "description": "Documents PDF traités"
+                "ContainerContent": {
+                    "fields": [
+                        "id", "container", "produit", "description", "code_hs", "quantite", "unite", "poids", "volume",
+                        "valeur", "devise", "pays_origine", "marques_numeros"
+                    ],
+                    "description": "Contenu détaillé des containers",
+                    "relations": {
+                        "container": "Container"
+                    }
+                },
+                "ManifestEntry": {
+                    "fields": [
+                        "id", "pdf_document", "vessel", "container", "shipper", "consigne",
+                        "numero_bl", "produits", "quantite", "unite", "poids", "volume",
+                        "valeur", "devise", "port_chargement", "port_dechargement",
+                        "date", "page", "created_at"
+                    ],
+                    "description": "Entrées de manifeste maritime",
+                    "relations": {
+                        "pdf_document": "PDFDocument",
+                        "vessel": "Vessel",
+                        "container": "Container",
+                        "shipper": "Shipper",
+                        "consigne": "Consigne"
+                    }
                 },
                 "Voyage": {
-                    "fields": ["id", "vessel", "date_depart", "date_arrive", "port_depart", "port_arrive"],
+                    "fields": ["id", "vessel", "date_depart", "date_arrive", "port_depart", "port_arrive", "created_at"],
                     "description": "Voyages des navires",
                     "relations": {
                         "vessel": "Vessel"
@@ -59,16 +104,18 @@ class ChatbotService:
             "available_imports": [
                 "from django.db.models import Q, Count, Sum, Avg, Max, Min",
                 "from datetime import datetime, timedelta",
-                "from manifest_app.models import Vessel, ManifestEntry, PDFDocument, Voyage"
+                "from manifest_app.models import Vessel, Shipper, Consigne, PDFDocument, Container, ContainerContent, ManifestEntry, Voyage"
             ],
             "examples": {
                 "search_vessels": "vessels = Vessel.objects.filter(name__icontains='MAERSK')",
                 "count_entries": "count = ManifestEntry.objects.count()",
                 "filter_by_date": "entries = ManifestEntry.objects.filter(date__gte=datetime(2024, 1, 1))",
                 "group_by_country": "stats = ManifestEntry.objects.values('vessel__flag').annotate(count=Count('id'))",
-                "sum_weight": "total = ManifestEntry.objects.aggregate(total_weight=Sum('poids'))"
+                "sum_weight": "total = ManifestEntry.objects.aggregate(total_weight=Sum('poids'))",
+                "get_container_contents": "contents = ContainerContent.objects.filter(container__numero='MSKU1234567')"
             }
         }
+
         return schema
     
     def generate_search_code(self, user_query):
@@ -144,19 +191,27 @@ class ChatbotService:
                     'range': range, 'enumerate': enumerate, 'zip': zip,
                     'print': print  # Pour debug si nécessaire
                 },
+                # Django ORM tools
                 'Q': Q,
                 'Count': Count,
                 'Sum': Sum,
                 'Avg': Avg,
                 'Max': Max,
                 'Min': Min,
+                # Standard lib
                 'datetime': datetime,
                 'timedelta': timedelta,
+                # Django models
                 'Vessel': Vessel,
-                'ManifestEntry': ManifestEntry,
+                'Shipper': Shipper,
+                'Consigne': Consigne,
                 'PDFDocument': PDFDocument,
+                'Container': Container,
+                'ContainerContent': ContainerContent,
+                'ManifestEntry': ManifestEntry,
                 'Voyage': Voyage,
             }
+
             
             # Variables locales pour stocker le résultat
             local_vars = {}
@@ -276,7 +331,7 @@ class ChatbotService:
                     "code": search_code
                 }
             
-            print(f"Résultats de l'exécution : {execution_result['result']}")
+            # print(f"Résultats de l'exécution : {execution_result['result']}")
             
             # 3. Formater la réponse avec l'IA
             formatted_response = self.format_results_with_ai(user_query, execution_result['result'])
