@@ -14,8 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from .forms import PDFUploadForm, UserCreateForm
-from .models import (ChatMessage, Consigne, ManifestEntry, PDFDocument,
-                     Shipper, Vessel, Voyage)
+from .models import *
 from .services.ai_service import AIService
 from .services.chatbot_service import ChatbotService
 from .services.pdf_manager import PDFManager
@@ -131,7 +130,7 @@ def home(request):
     
     # Données pour les graphiques
     # Entrées par mois (6 derniers mois)
-    six_months_ago = datetime.now() - timedelta(days=180)
+    six_months_ago = now() - timedelta(days=180)  # Use timezone-aware datetime
     monthly_entries = ManifestEntry.objects.filter(
         date__gte=six_months_ago
     ).extra(
@@ -141,7 +140,8 @@ def home(request):
     ).order_by('month')
     
     # Documents traités par jour (7 derniers jours)
-    seven_days_ago = datetime.now() - timedelta(days=7)
+    from django.utils.timezone import now
+    seven_days_ago = now() - timedelta(days=7)  # Use timezone-aware datetime
     daily_processing = PDFDocument.objects.filter(
         date_ajout__gte=seven_days_ago,
         processed=True
@@ -231,10 +231,114 @@ def documents(request):
     }
     return render(request, 'manifest_app/documents.html', context)
 
+
+@login_required
+def consignes(request):
+    search_query = request.GET.get('search', '')
+    consignes_list = Consigne.objects.all()
+    
+    if search_query:
+        consignes_list = consignes_list.filter(
+            Q(name__icontains=search_query) |
+            Q(address__icontains=search_query) |
+            Q(city__icontains=search_query)
+        )
+    
+    consignes_list = consignes_list.annotate(
+        container_count=Count('container'),
+        entry_count=Count('manifestentry')
+    ).order_by('name')
+    
+    paginator = Paginator(consignes_list, 20)
+    page_number = request.GET.get('page')
+    consignes = paginator.get_page(page_number)
+    
+    context = {
+        'consignes': consignes,
+        'search_query': search_query,
+    }
+    
+    return render(request, 'manifest_app/consignes.html', context)
+
+
+@login_required
+def containers(request):
+    search_query = request.GET.get('search', '')
+    type_filter = request.GET.get('type', '')
+    status_filter = request.GET.get('status', '')
+    vessel_filter = request.GET.get('vessel', '')
+    
+    containers_list = Container.objects.select_related('vessel', 'shipper', 'consigne')
+    
+    if search_query:
+        containers_list = containers_list.filter(
+            Q(numero__icontains=search_query) |
+            Q(vessel__name__icontains=search_query) |
+            Q(shipper__name__icontains=search_query) |
+            Q(consigne__name__icontains=search_query)
+        )
+    
+    if type_filter:
+        containers_list = containers_list.filter(type_container=type_filter)
+    
+    if status_filter:
+        containers_list = containers_list.filter(statut=status_filter)
+    
+    if vessel_filter:
+        containers_list = containers_list.filter(vessel_id=vessel_filter)
+    
+    containers_list = containers_list.annotate(
+        content_count=Count('containerContent')
+    ).order_by('-id')
+    
+    # Pour les filtres
+    container_types = Container.CONTAINER_TYPES
+    container_statuses = Container.STATUS_CHOICES
+    vessels = Vessel.objects.all().order_by('name')
+    
+    paginator = Paginator(containers_list, 20)
+    page_number = request.GET.get('page')
+    containers = paginator.get_page(page_number)
+    
+    context = {
+        'containers': containers,
+        'search_query': search_query,
+        'type_filter': type_filter,
+        'status_filter': status_filter,
+        'vessel_filter': vessel_filter,
+        'container_types': container_types,
+        'container_statuses': container_statuses,
+        'vessels': vessels,
+    }
+    
+    return render(request, 'manifest_app/containers.html', context)
+
+@login_required
+def container_detail(request, container_id):
+    container = get_object_or_404(Container, id=container_id)
+    
+    # Contenu du container
+    contents = ContainerContent.objects.filter(container=container)
+    
+    # Statistiques du contenu
+    content_stats = {
+        'total_items': contents.count(),
+        'total_weight': contents.aggregate(Sum('poids'))['poids__sum'] or 0,
+        'total_volume': contents.aggregate(Sum('volume'))['volume__sum'] or 0,
+        'total_value': contents.aggregate(Sum('valeur'))['valeur__sum'] or 0,
+    }
+    
+    context = {
+        'container': container,
+        'contents': contents,
+        'content_stats': content_stats,
+    }
+    
+    return render(request, 'manifest_app/container_detail.html', context)
 @login_required
 def donnees(request):
     search_query = request.GET.get('search', '')
-    entries = ManifestEntry.objects.select_related('vessel', 'voyage').all()
+    entries = ManifestEntry.objects.select_related('vessel').all()
     
     if search_query:
         entries = entries.filter(
@@ -255,8 +359,8 @@ def donnees(request):
 
 @login_required
 def utilisateurs(request):
-    from django.contrib.auth.models import User
-    users = User.objects.all()
+    users = User.objects.order_by('id')  # Explicitly order the queryset
+    paginator = Paginator(users, 10)
     paginator = Paginator(users, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
