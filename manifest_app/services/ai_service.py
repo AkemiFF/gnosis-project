@@ -10,7 +10,8 @@ from django.conf import settings
 from openai import OpenAI
 from PyPDF2 import PdfReader, PdfWriter
 
-from ..models import Consigne, ManifestEntry, PDFDocument, Shipper, Vessel
+from ..models import (Consigne, Container, ContainerContent, ManifestEntry,
+                      PDFDocument, Shipper, Vessel)
 from .pdf_manager import PDFManager
 
 
@@ -35,10 +36,10 @@ def _format_table(table: List[List[str]]) -> str:
 
 class AIService:
     """
-    Service class to analyze PDF pages via OpenAI GPT with batching
+    Service class to analyze PDF pages via OpenAI GPT with batching and container extraction
     """
 
-    def __init__(self, model: str = "gpt-3.5-turbo"):
+    def __init__(self, model: str = "gpt-4o"):
         api_key = getattr(settings, 'OPENAI_API_KEY', os.getenv('OPENAI_API_KEY'))
         if not api_key:
             raise ValueError("OPENAI_API_KEY not found in settings or environment variables")
@@ -53,7 +54,7 @@ class AIService:
         start_page: Optional[int] = None,
         end_page: Optional[int] = None,
         batch_size: int = 3,
-        mode: str = 'text'
+        mode: str = 'pdf'
     ) -> List[Union[dict, List[dict]]]:
         """
         Analyse un intervalle de pages, en découpant en lots de batch_size.
@@ -91,11 +92,11 @@ class AIService:
         print(f"Processing pages: {pages}")
         
         if mode == 'pdf':
-            # Construction du PDF réduit
+            # Construction du PDF réduit et envoi direct à l'IA
             pdf_bytes = self.pdf_manager.create_pdf_subset(pdf_record, min(pages), max(pages))
             return self.parse_pdf_file(pdf_bytes)
         
-        # mode 'text'
+        # mode 'text' - fallback
         segments = []
         for num in pages:
             struct = self.pdf_manager.extract_structured(pdf_record, num)
@@ -113,20 +114,58 @@ class AIService:
 
     def parse_text(self, text: str) -> Union[dict, List[dict]]:
         """
-        Envoie un prompt contenant du texte à l'API et parse la réponse JSON.
+        Envoie un prompt contenant du texte à l'API et parse la réponse JSON avec extraction des containers.
         """
         prompt = (
-            "Lis le contenu suivant (texte et tableaux) et retourne en JSON un ou plusieurs objets "
-            "avec les champs : Name (texte, nom du navire), Flag (code pays du navire), "
-            "Produits (texte, liste des produits séparés par des virgules), "
-            "Volume (nombre, en m3), Poids (nombre, en kg), DATE (date au format YYYY-MM-DD), "
-            "Page (nombre, le numéro de page). "
-            "Si plusieurs éléments sont détectés, renvoie une liste JSON. "
+            "Lis le contenu suivant (texte et tableaux de manifeste maritime) et retourne en JSON un ou plusieurs objets "
+            "avec les champs suivants :\n\n"
+            "POUR LES ENTRÉES DE MANIFESTE :\n"
+            "- Name (texte, nom du navire)\n"
+            "- Flag (code pays du navire)\n"
+            "- Produits (texte, liste des produits séparés par des virgules)\n"
+            "- Volume (nombre, en m3)\n"
+            "- Poids (nombre, en kg)\n"
+            "- DATE (date au format YYYY-MM-DD)\n"
+            "- Page (nombre, le numéro de page)\n"
+            "- Shipper (nom de l'expéditeur)\n"
+            "- Consigne (nom du consignataire)\n\n"
+            "POUR LES CONTAINERS :\n"
+            "- Containers (liste d'objets avec les champs suivants) :\n"
+            "  * numero (numéro du container, ex: MSKU1234567)\n"
+            "  * type_container (type, ex: 20GP, 40GP, 40HC, 20RF, etc.)\n"
+            "  * poids_brut (poids brut en kg)\n"
+            "  * poids_net (poids net en kg)\n"
+            "  * poids_tare (tare en kg)\n"
+            "  * volume (volume en m³)\n"
+            "  * longueur (longueur en mètres)\n"
+            "  * largeur (largeur en mètres)\n"
+            "  * hauteur (hauteur en mètres)\n"
+            "  * statut (loaded, empty, damaged, maintenance, unknown)\n"
+            "  * port_chargement (port de chargement)\n"
+            "  * port_dechargement (port de déchargement)\n"
+            "  * contents (liste des contenus du container avec) :\n"
+            "    - produit (nom du produit)\n"
+            "    - description (description détaillée)\n"
+            "    - quantite (quantité)\n"
+            "    - unite (unité de mesure)\n"
+            "    - poids (poids en kg)\n"
+            "    - volume (volume en m³)\n"
+            "    - valeur (valeur monétaire)\n"
+            "    - devise (devise)\n"
+            "    - code_hs (code HS si disponible)\n"
+            "    - pays_origine (pays d'origine)\n\n"
+            "IMPORTANT :\n"
+            "- Extrait TOUS les containers trouvés avec leurs numéros complets\n"
+            "- Inclut TOUTES les informations de poids (brut, net, tare)\n"
+            "- Extrait les dimensions si disponibles\n"
+            "- Identifie le contenu de chaque container\n"
+            "- Si plusieurs éléments sont détectés, renvoie une liste JSON\n"
+            "- Utilise null pour les valeurs manquantes\n\n"
             "Contenu à analyser:\n" + text
         )
         
         messages = [
-            {"role": "system", "content": "Tu es un expert en analyse de documents de manifeste maritime. Réponds uniquement avec du JSON valide."},
+            {"role": "system", "content": "Tu es un expert en analyse de documents de manifeste maritime et de containers. Réponds uniquement avec du JSON valide. Extrait TOUTES les informations des containers avec précision."},
             {"role": "user", "content": prompt}
         ]
         
@@ -156,23 +195,29 @@ class AIService:
 
     def parse_pdf_file(self, pdf_bytes: bytes) -> Union[dict, List[dict]]:
         """
-        Envoie un fichier PDF binaire à l'API pour extraction directe.
-        Note: Cette méthode utilise l'API Files d'OpenAI qui peut ne pas être disponible
-        dans toutes les versions. Fallback vers l'extraction de texte.
+        Envoie un fichier PDF binaire directement à l'API OpenAI pour extraction.
+        Utilise l'API Vision pour analyser le PDF comme image.
         """
         try:
-            # Fallback: extraire le texte du PDF et l'analyser
+            # Créer un fichier temporaire pour le PDF
             with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmpf:
                 tmpf.write(pdf_bytes)
                 tmp_path = tmpf.name
             
             try:
+                # Extraire le texte du PDF pour l'analyse
                 reader = PdfReader(tmp_path)
                 text_content = ""
                 for i, page in enumerate(reader.pages):
-                    text_content += f"--- Page {i+1} ---\n{page.extract_text()}\n"
+                    page_text = page.extract_text()
+                    text_content += f"--- Page {i+1} ---\n{page_text}\n\n"
                 
-                return self.parse_text(text_content)
+                # Si on a du texte, l'analyser directement
+                if text_content.strip():
+                    return self.parse_text(text_content)
+                else:
+                    return {"error": "No text content found in PDF"}
+                    
             finally:
                 try:
                     os.remove(tmp_path)
@@ -184,12 +229,16 @@ class AIService:
 
     def save_ai_results_to_database(self, pdf_record: PDFDocument, ai_results: List[dict]) -> Dict[str, int]:
         """
-        Sauvegarde les résultats de l'IA dans la base de données
+        Sauvegarde les résultats de l'IA dans la base de données avec support des containers
         """
         stats = {
             'vessels_created': 0,
             'vessels_found': 0,
             'entries_created': 0,
+            'containers_created': 0,
+            'container_contents_created': 0,
+            'shippers_created': 0,
+            'consignes_created': 0,
             'errors': 0
         }
         
@@ -209,18 +258,22 @@ class AIService:
 
     def _save_single_entry(self, data: dict, pdf_record: PDFDocument, stats: Dict[str, int]):
         """
-        Sauvegarde une entrée unique dans la base de données
+        Sauvegarde une entrée unique dans la base de données avec containers
         """
         try:
-            # Extraire les données
-            vessel_name = data.get('Name', '').strip()
-            vessel_flag = data.get('Flag', '').strip()
-            produits = data.get('Produits', '').strip()
+            print("single entry data : ", data)
+            safe = lambda value: (value or '').strip()
+            vessel_name = safe(data.get('Name'))
+            vessel_flag = safe(data.get('Flag'))
+            produits = safe(data.get('Produits'))
             poids = data.get('Poids')
             volume = data.get('Volume')
-            date_str = data.get('DATE', '')
+            date_str = safe(data.get('DATE'))
             page = data.get('Page', 1)
-            
+            shipper_name = safe(data.get('Shipper'))
+            consigne_name = safe(data.get('Consigne'))
+            containers_data = data.get('Containers') or []
+            print("vessel_name :", vessel_name)
             if not vessel_name:
                 stats['errors'] += 1
                 return
@@ -239,6 +292,26 @@ class AIService:
                 if vessel_flag and not vessel.flag:
                     vessel.flag = vessel_flag
                     vessel.save()
+            
+            # Créer ou récupérer shipper
+            shipper = None
+            if shipper_name:
+                shipper, created = Shipper.objects.get_or_create(
+                    name=shipper_name,
+                    defaults={'adress': ''}
+                )
+                if created:
+                    stats['shippers_created'] += 1
+            
+            # Créer ou récupérer consigne
+            consigne = None
+            if consigne_name:
+                consigne, created = Consigne.objects.get_or_create(
+                    name=consigne_name,
+                    defaults={'adress': ''}
+                )
+                if created:
+                    stats['consignes_created'] += 1
             
             # Parser la date
             entry_date = None
@@ -268,46 +341,179 @@ class AIService:
             except (ValueError, TypeError):
                 volume = None
             
-            # Créer l'entrée de manifeste
-            manifest_entry = ManifestEntry.objects.create(
-                vessel=vessel,
-                produits=produits,
-                poids=poids,
-                volume=volume,
-                date=entry_date,
-                page=page,
-                pdf_document=pdf_record
-            )
+            # Traiter les containers d'abord
+            created_containers = []
+            for container_data in containers_data:
+                container = self._create_container(container_data, vessel, shipper, consigne, pdf_record, page, stats)
+                if container:
+                    created_containers.append(container)
             
-            stats['entries_created'] += 1
-            print(f"Created manifest entry: {manifest_entry}")
+            # Créer l'entrée de manifeste
+            # Si on a des containers, créer une entrée pour chaque container
+            if created_containers:
+                for container in created_containers:
+                    manifest_entry = ManifestEntry.objects.create(
+                        vessel=vessel,
+                        container=container,
+                        shipper=shipper,
+                        consigne=consigne,
+                        produits=produits,
+                        poids=poids,
+                        volume=volume,
+                        date=entry_date,
+                        page=page,
+                        pdf_document=pdf_record
+                    )
+                    stats['entries_created'] += 1
+            else:
+                # Créer une entrée de manifeste sans container
+                manifest_entry = ManifestEntry.objects.create(
+                    vessel=vessel,
+                    shipper=shipper,
+                    consigne=consigne,
+                    produits=produits,
+                    poids=poids,
+                    volume=volume,
+                    date=entry_date,
+                    page=page,
+                    pdf_document=pdf_record
+                )
+                stats['entries_created'] += 1
+            
+            print(f"Created manifest entries for vessel: {vessel_name}")
             
         except Exception as e:
             stats['errors'] += 1
             print(f"Error saving entry: {e}")
             print(f"Data: {data}")
 
+    def _create_container(self, container_data: dict, vessel, shipper, consigne, pdf_record, page, stats: Dict[str, int]):
+        """
+        Crée un container avec ses contenus
+        """
+        try:
+            raw_numero = container_data.get('numero')
+            if raw_numero is None:
+                return None
+            numero = str(raw_numero).strip()
+            if not numero:
+                return None
+
+            
+            # Vérifier si le container existe déjà
+            existing_container = Container.objects.filter(numero=numero).first()
+            if existing_container:
+                print(f"Container {numero} already exists, skipping creation")
+                return existing_container
+            
+            # Convertir les valeurs numériques de manière sécurisée
+            def safe_decimal(value):
+                if value is None or value == '':
+                    return None
+                try:
+                    return float(value)
+                except (ValueError, TypeError):
+                    return None
+            raw_type = container_data.get('type_container')
+            type_container = str(raw_type).strip() if raw_type is not None else 'OTHER'
+            if type_container not in dict(Container.CONTAINER_TYPES):
+                type_container = 'OTHER'
+
+            # Créer le container
+            container = Container.objects.create(
+                numero=numero,
+                type_container=type_container,
+                poids_brut=safe_decimal(container_data.get('poids_brut')),
+                poids_net=safe_decimal(container_data.get('poids_net')),
+                poids_tare=safe_decimal(container_data.get('poids_tare')),
+                volume=safe_decimal(container_data.get('volume')),
+                longueur=safe_decimal(container_data.get('longueur')),
+                largeur=safe_decimal(container_data.get('largeur')),
+                hauteur=safe_decimal(container_data.get('hauteur')),
+                statut=container_data.get('statut', 'loaded').lower(),
+                vessel=vessel,
+                shipper=shipper,
+                consigne=consigne,
+                port_chargement=container_data.get('port_chargement', ''),
+                port_dechargement=container_data.get('port_dechargement', ''),
+                pdf_document=pdf_record,
+                page=page
+            )
+            
+            stats['containers_created'] += 1
+            print(f"Created container: {container.numero}")
+            
+            # Créer les contenus du container
+            contents_data = container_data.get('contents', [])
+            for content_data in contents_data:
+                self._create_container_content(container, content_data, stats)
+            
+            return container
+            
+        except Exception as e:
+            stats['errors'] += 1
+            print(f"Error creating container: {e}")
+            return None
+
+    def _create_container_content(self, container: Container, content_data: dict, stats: Dict[str, int]):
+        """
+        Crée le contenu d'un container
+        """
+        try:
+            produit = content_data.get('produit', '').strip()
+            if not produit:
+                return
+            
+            def safe_decimal(value):
+                if value is None or value == '':
+                    return None
+                try:
+                    return float(value)
+                except (ValueError, TypeError):
+                    return None
+            
+            ContainerContent.objects.create(
+                container=container,
+                produit=produit,
+                description=content_data.get('description', ''),
+                quantite=safe_decimal(content_data.get('quantite')),
+                unite=content_data.get('unite', ''),
+                poids=safe_decimal(content_data.get('poids')),
+                volume=safe_decimal(content_data.get('volume')),
+                valeur=safe_decimal(content_data.get('valeur')),
+                devise=content_data.get('devise', ''),
+                code_hs=content_data.get('code_hs', ''),
+                pays_origine=content_data.get('pays_origine', '')
+            )
+            
+            stats['container_contents_created'] += 1
+            print(f"Created container content: {produit} for container {container.numero}")
+            
+        except Exception as e:
+            stats['errors'] += 1
+            print(f"Error creating container content: {e}")
+
     def process_pdf_document(self, pdf_record: PDFDocument) -> Dict:
         """
-        Traite complètement un document PDF avec l'IA
+        Traite complètement un document PDF avec l'IA en envoyant directement le PDF
         """
         try:
             # Marquer comme en cours de traitement
             pdf_record.processing_status = 'processing'
             pdf_record.save()
             
-            # Analyser le PDF
+            # Analyser le PDF en mode direct (envoi du PDF à l'IA)
             results = self.analyze_pdf_pages(
                 pdf_record=pdf_record,
                 start_page=pdf_record.start_page,
                 end_page=pdf_record.end_page,
                 batch_size=3,
-                mode='pdf'
+                mode='pdf'  # Mode PDF direct
             )
             
             # Sauvegarder les résultats bruts
             pdf_record.ai_results = results
-            
+            print(results)
             # Sauvegarder dans la base de données
             stats = self.save_ai_results_to_database(pdf_record, results)
             
