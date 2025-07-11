@@ -27,4 +27,7 @@ urlpatterns = [
     path('api/chatbot/', views.chatbot_api, name='chatbot_api'),
     path('chatbot/clear/', views.clear_chat_history, name='clear_chat_history'),
     path('chatbot/advanced/', views.chatbot_advanced_view, name='chatbot_advanced'),
+    path('consignes/', views.consignes, name='consignes'),
+    path('containers/', views.containers, name='containers'),
+    path('containers/<int:container_id>/', views.container_detail, name='container_detail'),
 ]
