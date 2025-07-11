@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Container {{ container.numero }}{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-900 flex items-center">
+                <i class="fas fa-shipping-fast mr-3 text-[#38276b]"></i>
+                Container {{ container.numero }}
+            </h3>
+            <div>
+                <a href="{% url 'containers' %}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+                    <i class="fas fa-arrow-left mr-2"></i> Retour à la liste
+                </a>
+            </div>
+        </div>
+        
+        <div class="p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Informations générales -->
+                <div>
+                    <h5 class="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-info-circle mr-2 text-[#38276b]"></i>
+                        Informations générales
+                    </h5>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <dl class="space-y-3">
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Numéro:</dt>
+                                <dd class="text-sm text-gray-900 font-medium">{{ container.numero }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Type:</dt>
+                                <dd>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        {{ container.get_type_container_display }}
+                                    </span>
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Statut:</dt>
+                                <dd>
+                                    {% if container.statut == 'loaded' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            {{ container.get_statut_display }}
+                                        </span>
+                                    {% elif container.statut == 'empty' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                            {{ container.get_statut_display }}
+                                        </span>
+                                    {% elif container.statut == 'damaged' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            {{ container.get_statut_display }}
+                                        </span>
+                                    {% elif container.statut == 'repair' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                            {{ container.get_statut_display }}
+                                        </span>
+                                    {% elif container.statut == 'transit' %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                            {{ container.get_statut_display }}
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#38276b]/10 text-[#38276b]">
+                                            {{ container.get_statut_display }}
+                                        </span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Navire:</dt>
+                                <dd class="text-sm text-gray-900">
+                                    {% if container.vessel %}
+                                        <a href="{% url 'vessel_detail' container.vessel.id %}" class="text-[#38276b] hover:text-[#38276b]/80 font-medium">
+                                            {{ container.vessel.name }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-gray-400">Non spécifié</span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Expéditeur:</dt>
+                                <dd class="text-sm text-gray-900">
+                                    {% if container.shipper %}
+                                        {{ container.shipper.name }}
+                                    {% else %}
+                                        <span class="text-gray-400">Non spécifié</span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Consignataire:</dt>
+                                <dd class="text-sm text-gray-900">
+                                    {% if container.consigne %}
+                                        {{ container.consigne.name }}
+                                    {% else %}
+                                        <span class="text-gray-400">Non spécifié</span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+                
+                <!-- Poids et dimensions -->
+                <div>
+                    <h5 class="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-weight-hanging mr-2 text-[#38276b]"></i>
+                        Poids et dimensions
+                    </h5>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <dl class="space-y-3">
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Poids brut:</dt>
+                                <dd class="text-sm text-gray-900">
+                                    {% if container.poids_brut %}
+                                        {{ container.poids_brut|floatformat:2 }} kg
+                                    {% else %}
+                                        <span class="text-gray-400">Non spécifié</span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Poids net:</dt>
+                                <dd class="text-sm text-gray-900">
+                                    {% if container.poids_net %}
+                                        {{ container.poids_net|floatformat:2 }} kg
+                                    {% else %}
+                                        <span class="text-gray-400">Non spécifié</span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Tare:</dt>
+                                <dd class="text-sm text-gray-900">
+                                    {% if container.poids_tare %}
+                                        {{ container.poids_tare|floatformat:2 }} kg
+                                    {% else %}
+                                        <span class="text-gray-400">Non spécifié</span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Volume:</dt>
+                                <dd class="text-sm text-gray-900">
+                                    {% if container.volume %}
+                                        {{ container.volume|floatformat:2 }} m³
+                                    {% else %}
+                                        <span class="text-gray-400">Non spécifié</span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Dimensions:</dt>
+                                <dd class="text-sm text-gray-900">
+                                    {% if container.longueur and container.largeur and container.hauteur %}
+                                        {{ container.longueur|floatformat:2 }} × {{ container.largeur|floatformat:2 }} × {{ container.hauteur|floatformat:2 }} m
+                                    {% else %}
+                                        <span class="text-gray-400">Non spécifiées</span>
+                                    {% endif %}
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                <!-- Ports -->
+                <div>
+                    <h5 class="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-anchor mr-2 text-[#38276b]"></i>
+                        Ports
+                    </h5>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <dl class="space-y-3">
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Port de chargement:</dt>
+                                <dd class="text-sm text-gray-900">{{ container.port_chargement|default:"Non spécifié" }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Port de déchargement:</dt>
+                                <dd class="text-sm text-gray-900">{{ container.port_dechargement|default:"Non spécifié" }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+                
+                <!-- Scellés -->
+                <div>
+                    <h5 class="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-lock mr-2 text-[#38276b]"></i>
+                        Scellés
+                    </h5>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <dl class="space-y-3">
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Scellé douane:</dt>
+                                <dd class="text-sm text-gray-900">{{ container.scelle_douane|default:"Non spécifié" }}</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-sm font-medium text-gray-500">Scellé transporteur:</dt>
+                                <dd class="text-sm text-gray-900">{{ container.scelle_transporteur|default:"Non spécifié" }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistiques du contenu -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-gradient-to-r from-[#38276b] to-[#5462a3] rounded-lg shadow-sm p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-white/80">Articles</p>
+                    <p class="text-2xl font-bold">{{ content_stats.total_items }}</p>
+                </div>
+                <div class="p-3 bg-white/20 rounded-full">
+                    <i class="fas fa-boxes text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-sm p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-white/80">Poids total</p>
+                    <p class="text-2xl font-bold">{{ content_stats.total_weight|floatformat:2 }}</p>
+                    <p class="text-xs text-white/80">kg</p>
+                </div>
+                <div class="p-3 bg-white/20 rounded-full">
+                    <i class="fas fa-weight text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-sm p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-white/80">Volume total</p>
+                    <p class="text-2xl font-bold">{{ content_stats.total_volume|floatformat:2 }}</p>
+                    <p class="text-xs text-white/80">m³</p>
+                </div>
+                <div class="p-3 bg-white/20 rounded-full">
+                    <i class="fas fa-cube text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg shadow-sm p-6 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-white/80">Valeur totale</p>
+                    <p class="text-2xl font-bold">{{ content_stats.total_value|floatformat:2 }}</p>
+                </div>
+                <div class="p-3 bg-white/20 rounded-full">
+                    <i class="fas fa-dollar-sign text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contenu du container -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h4 class="text-lg font-semibold text-gray-900 flex items-center">
+                <i class="fas fa-list mr-3 text-[#38276b]"></i>
+                Contenu du container
+            </h4>
+        </div>
+        
+        <div class="p-6">
+            {% if contents %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produit</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantité</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Poids</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valeur</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Code HS</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pays d'origine</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for content in contents %}
+                            <tr class="hover:bg-gray-50 transition-colors duration-200">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">{{ content.produit }}</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm text-gray-900">{{ content.description|default:"-" }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {% if content.quantite %}
+                                        {{ content.quantite|floatformat:2 }} {{ content.unite|default:"" }}
+                                    {% else %}
+                                        <span class="text-gray-400">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {% if content.poids %}
+                                        {{ content.poids|floatformat:2 }} kg
+                                    {% else %}
+                                        <span class="text-gray-400">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {% if content.volume %}
+                                        {{ content.volume|floatformat:2 }} m³
+                                    {% else %}
+                                        <span class="text-gray-400">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {% if content.valeur %}
+                                        {{ content.valeur|floatformat:2 }} {{ content.devise|default:"" }}
+                                    {% else %}
+                                        <span class="text-gray-400">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ content.code_hs|default:"-" }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ content.pays_origine|default:"-" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-12">
+                    <div class="flex flex-col items-center">
+                        <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
+                        <h5 class="text-lg font-medium text-gray-900 mb-2">Aucun contenu enregistré</h5>
+                        <p class="text-gray-500 max-w-md">Le contenu de ce container n'a pas encore été extrait ou saisi dans le système.</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
