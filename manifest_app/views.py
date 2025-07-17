@@ -194,7 +194,7 @@ def statistiques(request):
         nombre_voyage=Count('id')
     ).order_by('-nombre_voyage')[:10]
     
-    recent_products = ManifestEntry.objects.select_related('vessel', 'voyage').order_by('-date')[:10]
+    recent_products = ManifestEntry.objects.select_related('vessel', 'shipper').order_by('-date')[:10]
     
     # Statistiques générales
     total_vessels = Vessel.objects.count()

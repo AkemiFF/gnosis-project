@@ -1,0 +1,196 @@
+[
+    {
+        "Name": "LASALLE",
+        "Flag": "LR",
+        "Produits": "BASMATI 1121 SELLA RICE",
+        "Volume": 27.0,
+        "Poids": 25188.0,
+        "DATE": "2025-01-02",
+        "Page": 1,
+        "Shipper": "S.K BROTHERS",
+        "Consigne": "HM AGRO MADAGASCAR",
+        "Containers": [
+            {
+                "numero": "MRKU7970140",
+                "type_container": "20DRY",
+                "poids_brut": 25188.0,
+                "poids_net": 25000.0,
+                "poids_tare": 2170.0,
+                "volume": 27.0,
+                "longueur": null,
+                "largeur": null,
+                "hauteur": null,
+                "statut": "loaded",
+                "port_chargement": "MUNDRA, INDIA",
+                "port_dechargement": "Toamasina, Madagascar",
+                "contents": [
+                    {
+                        "produit": "BASMATI 1121 SELLA RICE",
+                        "description": "625 BAGS BASMATI 1121 SELLA RICE 5KG PACKING IN NON WOVEN BAG WITH PP INNER",
+                        "quantite": 625,
+                        "unite": "BAGS",
+                        "poids": 25000.0,
+                        "volume": null,
+                        "valeur": null,
+                        "devise": null,
+                        "code_hs": "10063020",
+                        "pays_origine": "India"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "Name": "LASALLE",
+        "Flag": "LR",
+        "Produits": "IRRI-6 RICE",
+        "Volume": 270.0,
+        "Poids": 270648.0,
+        "DATE": "2025-01-02",
+        "Page": 1,
+        "Shipper": "JATLEE COMMODITIES (PVT) LTD",
+        "Consigne": "SOCIETE HTC INTERNATIONAL SARL",
+        "Containers": [
+            {
+                "numero": "TCLU2327855",
+                "type_container": "20DRY",
+                "poids_brut": 27064.8,
+                "poids_net": 27000.0,
+                "poids_tare": 2200.0,
+                "volume": 27.0,
+                "longueur": null,
+                "largeur": null,
+                "hauteur": null,
+                "statut": "loaded",
+                "port_chargement": "PORT QASIM, PAKISTAN",
+                "port_dechargement": "Toamasina, Madagascar",
+                "contents": [
+                    {
+                        "produit": "IRRI-6 RICE",
+                        "description": "540 BAGS IRRI-6 RICE, 25% BROKEN, CROP 2024, PACKING: 50 KG SINGLE NEW P.P. BAGS",
+                        "quantite": 540,
+                        "unite": "BAGS",
+                        "poids": 27000.0,
+                        "volume": null,
+                        "valeur": null,
+                        "devise": null,
+                        "code_hs": "100630",
+                        "pays_origine": "Pakistan"
+                    }
+                ]
+            },
+            {
+                "numero": "HASU1509914",
+                "type_container": "20DRY",
+                "poids_brut": 27064.8,
+                "poids_net": 27000.0,
+                "poids_tare": 2220.0,
+                "volume": 27.0,
+                "longueur": null,
+                "largeur": null,
+                "hauteur": null,
+                "statut": "loaded",
+                "port_chargement": "PORT QASIM, PAKISTAN",
+                "port_dechargement": "Toamasina, Madagascar",
+                "contents": [
+                    {
+                        "produit": "IRRI-6 RICE",
+                        "description": "540 BAGS IRRI-6 RICE, 25% BROKEN, CROP 2024, PACKING: 50 KG SINGLE NEW P.P. BAGS",
+                        "quantite": 540,
+                        "unite": "BAGS",
+                        "poids": 27000.0,
+                        "volume": null,
+                        "valeur": null,
+                        "devise": null,
+                        "code_hs": "100630",
+                        "pays_origine": "Pakistan"
+                    }
+                ]
+            },
+            {
+                "numero": "UETU2058425",
+                "type_container": "20DRY",
+                "poids_brut": 27064.8,
+                "poids_net": 27000.0,
+                "poids_tare": 2230.0,
+                "volume": 27.0,
+                "longueur": null,
+                "largeur": null,
+                "hauteur": null,
+                "statut": "loaded",
+                "port_chargement": "PORT QASIM, PAKISTAN",
+                "port_dechargement": "Toamasina, Madagascar",
+                "contents": [
+                    {
+                        "produit": "IRRI-6 RICE",
+                        "description": "540 BAGS IRRI-6 RICE, 25% BROKEN, CROP 2024, PACKING: 50 KG SINGLE NEW P.P. BAGS",
+                        "quantite": 540,
+                        "unite": "BAGS",
+                        "poids": 27000.0,
+                        "volume": null,
+                        "valeur": null,
+                        "devise": null,
+                        "code_hs": "100630",
+                        "pays_origine": "Pakistan"
+                    }
+                ]
+            },
+            {
+                "numero": "GCXU2554848",
+                "type_container": "20DRY",
+                "poids_brut": 27064.8,
+                "poids_net": 27000.0,
+                "poids_tare": 2100.0,
+                "volume": 27.0,
+                "longueur": null,
+                "largeur": null,
+                "hauteur": null,
+                "statut": "loaded",
+                "port_chargement": "PORT QASIM, PAKISTAN",
+                "port_dechargement": "Toamasina, Madagascar",
+                "contents": [
+                    {
+                        "produit": "IRRI-6 RICE",
+                        "description": "540 BAGS IRRI-6 RICE, 25% BROKEN, CROP 2024, PACKING: 50 KG SINGLE NEW P.P. BAGS",
+                        "quantite": 540,
+                        "unite": "BAGS",
+                        "poids": 27000.0,
+                        "volume": null,
+                        "valeur": null,
+                        "devise": null,
+                        "code_hs": "100630",
+                        "pays_origine": "Pakistan"
+                    }
+                ]
+            },
+            {
+                "numero": "MSKU4448051",
+                "type_container": "20DRY",
+                "poids_brut": 27064.8,
+                "poids_net": 27000.0,
+                "poids_tare": 2170.0,
+                "volume": 27.0,
+                "longueur": null,
+                "largeur": null,
+                "hauteur": null,
+                "statut": "loaded",
+                "port_chargement": "PORT QASIM, PAKISTAN",
+                "port_dechargement": "Toamasina, Madagascar",
+                "contents": [
+                    {
+                        "produit": "IRRI-6 RICE",
+                        "description": "540 BAGS IRRI-6 RICE, 25% BROKEN, CROP 2024, PACKING: 50 KG SINGLE NEW P.P. BAGS",
+                        "quantite": 540,
+                        "unite": "BAGS",
+                        "poids": 27000.0,
+                        "volume": null,
+                        "valeur": null,
+                        "devise": null,
+                        "code_hs": "100630",
+                        "pays_origine": "Pakistan"
+                    }
+                ]
+            }
+        ]
+    }
+]
