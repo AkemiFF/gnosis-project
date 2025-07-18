@@ -156,6 +156,8 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 50 * 1024 * 1024
 broker_connection_retry_on_startup = True
 
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+
 # CELERY_BROKER_URL = os.getenv('REDIS_URL')
 CELERY_BROKER_USE_SSL = {
     'ssl_cert_reqs': 0  
