@@ -141,12 +141,12 @@ class Container(models.Model):
     
     # Statut et ports
     statut = models.CharField(max_length=20, choices=STATUS_CHOICES, default='loaded')
-    port_chargement = models.CharField(max_length=100, blank=True)
-    port_dechargement = models.CharField(max_length=100, blank=True)
+    port_chargement = models.CharField(max_length=100, blank=True, null=True)
+    port_dechargement = models.CharField(max_length=100, blank=True, null=True)
     
     # Scellés
-    scelle_douane = models.CharField(max_length=50, blank=True)
-    scelle_transporteur = models.CharField(max_length=50, blank=True)
+    scelle_douane = models.CharField(max_length=50, blank=True, null=True)
+    scelle_transporteur = models.CharField(max_length=50, blank=True, null=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -158,9 +158,9 @@ class Container(models.Model):
 
 class ContainerContent(models.Model):
     container = models.ForeignKey(Container, on_delete=models.CASCADE, related_name='containerContent')
-    produit = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    code_hs = models.CharField(max_length=20, blank=True)
+    produit = models.CharField(max_length=255,blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    code_hs = models.CharField(max_length=20, blank=True,null=True)
     quantite = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 
@@ -168,7 +168,7 @@ class ContainerContent(models.Model):
         blank=True,
         validators=[MinValueValidator(Decimal('0'))]
     )
-    unite = models.CharField(max_length=20, blank=True)
+    unite = models.CharField(max_length=20, blank=True,null=True)
     poids = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 
@@ -192,7 +192,7 @@ class ContainerContent(models.Model):
     )
     devise = models.CharField(max_length=10, blank=True, null=True)
     pays_origine = models.CharField(max_length=100, blank=True, null=True)
-    marques_numeros = models.TextField(blank=True)
+    marques_numeros = models.TextField(blank=True,null=True)
     
     def __str__(self):
         return f"{self.produit} - {self.container.numero}"
