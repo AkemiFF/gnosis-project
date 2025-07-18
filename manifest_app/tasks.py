@@ -17,14 +17,14 @@ def process_pdf_ai_task(pdf_id):
         result = ai_service.process_pdf_document(pdf_doc)
 
         if result['success']:
-            pdf_doc.processing_status = 'done'
+            pdf_doc.processing_status = 'completed'
             pdf_doc.save()
             return {
                 'success': True,
                 'stats': result['stats'],
             }
         else:
-            pdf_doc.processing_status = 'error'
+            pdf_doc.processing_status = 'pending'
             pdf_doc.save()
             return {
                 'success': False,
@@ -33,7 +33,7 @@ def process_pdf_ai_task(pdf_id):
 
     except Exception as e:
         if 'pdf_doc' in locals():
-            pdf_doc.processing_status = 'error'
+            pdf_doc.processing_status = 'pending'
             pdf_doc.save()
         return {
             'success': False,

@@ -2064,3 +2064,75 @@ INFO "POST /documents/upload/ HTTP/1.1" 302 0
 INFO "GET /documents/ HTTP/1.1" 200 20348
 INFO "POST /documents/17/process/ HTTP/1.1" 200 139
 INFO "GET /documents/ HTTP/1.1" 200 19405
+INFO Watching for file changes with StatReloader
+INFO "GET /admin/ HTTP/1.1" 200 14663
+WARNING Not Found: /favicon.ico
+WARNING "GET /favicon.ico HTTP/1.1" 404 9391
+INFO "GET /admin/manifest_app/pdfdocument/ HTTP/1.1" 200 13433
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/pdfdocument/17/change/ HTTP/1.1" 200 17524
+INFO "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO "POST /admin/manifest_app/pdfdocument/17/change/ HTTP/1.1" 302 0
+INFO "GET /admin/manifest_app/pdfdocument/ HTTP/1.1" 200 13664
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET / HTTP/1.1" 200 33550
+INFO "GET /documents/ HTTP/1.1" 200 19396
+INFO "POST /documents/17/process/ HTTP/1.1" 200 139
+INFO "GET /documents/ HTTP/1.1" 200 19405
+INFO "GET /documents/ HTTP/1.1" 200 19405
+INFO "GET /documents/ HTTP/1.1" 200 19405
+INFO "GET /media/images/logo-gnosis.png HTTP/1.1" 200 364003
+INFO "GET /media/images/logo-gnosis-2.png HTTP/1.1" 200 67739
+INFO "GET / HTTP/1.1" 200 33564
+INFO Watching for file changes with StatReloader
+INFO Watching for file changes with StatReloader
+INFO "GET /containers/ HTTP/1.1" 200 22817
+INFO "GET /documents/ HTTP/1.1" 200 19405
+INFO "GET /admin/ HTTP/1.1" 200 14721
+WARNING Not Found: /favicon.ico
+WARNING "GET /favicon.ico HTTP/1.1" 404 9391
+INFO "GET /admin/manifest_app/pdfdocument/ HTTP/1.1" 200 13433
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/pdfdocument/17/change/ HTTP/1.1" 200 17524
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "POST /admin/manifest_app/pdfdocument/17/change/ HTTP/1.1" 302 0
+INFO "GET /admin/manifest_app/pdfdocument/ HTTP/1.1" 200 13664
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /documents/ HTTP/1.1" 200 19396
+INFO "POST /documents/17/process/ HTTP/1.1" 200 139
+INFO "GET /documents/ HTTP/1.1" 200 19405
+INFO "GET /admin/manifest_app/pdfdocument/ HTTP/1.1" 200 13433
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/shipper/ HTTP/1.1" 200 20530
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/manifestentry/ HTTP/1.1" 200 60946
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO "GET /admin/manifest_app/container/ HTTP/1.1" 200 49024
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /documents/ HTTP/1.1" 200 19732
+INFO "GET /admin/manifest_app/pdfdocument/ HTTP/1.1" 200 13433
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/pdfdocument/17/change/ HTTP/1.1" 200 123120
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /documents/ HTTP/1.1" 200 19732
+INFO "GET /admin/manifest_app/manifestentry/ HTTP/1.1" 200 60946
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/pdfdocument/ HTTP/1.1" 200 13433
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /admin/manifest_app/pdfdocument/17/change/ HTTP/1.1" 200 123120
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "POST /admin/manifest_app/pdfdocument/17/change/ HTTP/1.1" 302 0
+INFO "GET /admin/manifest_app/pdfdocument/ HTTP/1.1" 200 13664
+INFO "GET /admin/jsi18n/ HTTP/1.1" 200 8985
+INFO "GET /documents/ HTTP/1.1" 200 19739
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/tasks.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO /home/akemi/Bureau/Gnosis/v3/manifest_app/tasks.py changed, reloading.
+INFO Watching for file changes with StatReloader
+INFO Watching for file changes with StatReloader

@@ -2,6 +2,7 @@ import logging
 import os
 from pathlib import Path
 
+import dj_database_url
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,12 +53,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'manifest_project.wsgi.application'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'gnosis'),
+        'USER': os.getenv('DB_USER', 'gnosis'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'a8ssY7dddfRJFeVOso53CdJTDeEhWvri'),
+        'HOST': os.getenv('DB_HOST', 'dpg-d1t4026r433s73ev8qjg-a.oregon-postgres.render.com'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
