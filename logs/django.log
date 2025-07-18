@@ -2342,3 +2342,13 @@ INFO Watching for file changes with StatReloader
 INFO "GET / HTTP/1.1" 200 32545
 INFO "GET /documents/ HTTP/1.1" 200 17397
 INFO "GET /documents/upload/ HTTP/1.1" 200 17805
+[2025-07-18 18:51:38,460] INFO django.utils.autoreload - Watching for file changes with StatReloader
+[2025-07-18 18:51:48,093] INFO django.server - "GET / HTTP/1.1" 302 0
+[2025-07-18 18:51:48,153] INFO django.server - "GET /login/?next=/ HTTP/1.1" 200 15024
+[2025-07-18 18:51:48,453] INFO django.server - "GET /media/images/logo-gnosis-2.png HTTP/1.1" 200 67739
+[2025-07-18 18:52:36,547] INFO django.server - "POST /login/?next=/ HTTP/1.1" 302 0
+[2025-07-18 18:52:36,873] INFO django.server - "GET / HTTP/1.1" 200 34478
+[2025-07-18 18:52:37,233] INFO django.server - "GET /media/images/logo-gnosis.png HTTP/1.1" 200 364003
+[2025-07-18 18:52:42,177] INFO django.utils.autoreload - /home/akemi/Bureau/Gnosis/v3/manifest_project/settings.py changed, reloading.
+[2025-07-18 18:52:46,082] INFO django.utils.autoreload - Watching for file changes with StatReloader
+[2025-07-18 18:53:25,379] INFO django.server - "GET /donnees/ HTTP/1.1" 200 35656
