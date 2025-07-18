@@ -102,8 +102,8 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'simple': {
-            'format': '{levelname} {message}',
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} - {message}',
             'style': '{',
         },
     },
@@ -111,8 +111,8 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs/django.log',
-            'formatter': 'simple',
+            'filename': str(BASE_DIR / 'logs/django.log'),
+            'formatter': 'verbose',  # <== ici
         },
     },
     'loggers': {
