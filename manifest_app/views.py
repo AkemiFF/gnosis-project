@@ -96,6 +96,7 @@ def create_user(request):
         form = UserCreateForm()
     
     return render(request, 'manifest_app/create_user.html', {'form': form})
+
 @login_required
 def home(request):
     # Statistiques générales
@@ -105,7 +106,7 @@ def home(request):
     error_documents = PDFDocument.objects.filter(processing_status='error').count()
     
     total_vessels = Vessel.objects.count()
-    total_voyages = Voyage.objects.count()
+    total_voyages = Voyage.objects.count() # Keep this line as per original, but new charts won't use it
     total_entries = ManifestEntry.objects.count()
     
     # Statistiques des données extraites par l'IA
@@ -134,9 +135,9 @@ def home(request):
     ).order_by('-entries_count')[:5]
     
     # Données pour les graphiques
-    # Entrées par mois (6 derniers mois)
-    six_months_ago = now() - timedelta(days=180)  # Use timezone-aware datetime
-    monthly_entries = ManifestEntry.objects.filter(
+    # Entrées par mois (6 derniers mois) - FIXED: Convert datetime to string
+    six_months_ago = now() - timedelta(days=200)  
+    monthly_entries_raw = ManifestEntry.objects.filter(
         date__gte=six_months_ago
     ).annotate(
         month=TruncMonth('date')
@@ -146,10 +147,17 @@ def home(request):
         count=Count('id')
     ).order_by('month')
     
-    # Documents traités par jour (7 derniers jours)
-  
-    seven_days_ago = now() - timedelta(days=7)  # Use timezone-aware datetime
-    daily_processing = PDFDocument.objects.filter(
+    # Convert datetime objects to strings for JSON serialization
+    monthly_entries = []
+    for entry in monthly_entries_raw:
+        monthly_entries.append({
+            'month': entry['month'].strftime('%Y-%m-01') if entry['month'] else None,
+            'count': entry['count']
+        })
+    
+    # Documents traités par jour (7 derniers jours) - FIXED: Convert datetime to string
+    seven_days_ago = now() - timedelta(days=7)  
+    daily_processing_raw = PDFDocument.objects.filter(
         date_ajout__gte=seven_days_ago,
         processed=True
         ).annotate(
@@ -159,6 +167,46 @@ def home(request):
         ).annotate(
             count=Count('id')
         ).order_by('day')
+
+    # Convert datetime objects to strings for JSON serialization
+    daily_processing = []
+    for entry in daily_processing_raw:
+        daily_processing.append({
+            'day': entry['day'].strftime('%Y-%m-%d') if entry['day'] else None,
+            'count': entry['count']
+        })
+
+    # NEW: Documents par statut pour graphique Doughnut
+    document_status_data = [
+        {'status': 'Traités', 'count': processed_documents},
+        {'status': 'En attente', 'count': pending_documents},
+        {'status': 'Erreurs', 'count': error_documents},
+    ]
+
+    # NEW: Top 5 types de conteneurs pour graphique Bar
+    top_container_types = Container.objects.values('type_container').annotate(
+        count=Count('id')
+    ).order_by('-count')[:5]
+
+    # NEW: Poids total des cargaisons par mois (6 derniers mois) - FIXED: Convert datetime to string
+    monthly_weight_raw = ManifestEntry.objects.filter(
+        date__gte=six_months_ago,
+        poids__isnull=False
+    ).annotate(
+        month=TruncMonth('date')
+    ).values(
+        'month'
+    ).annotate(
+        total_weight=Sum('poids')
+    ).order_by('month')
+    
+    # Convert datetime objects to strings for JSON serialization
+    monthly_weight_data = []
+    for entry in monthly_weight_raw:
+        monthly_weight_data.append({
+            'month': entry['month'].strftime('%Y-%m-01') if entry['month'] else None,
+            'total_weight': float(entry['total_weight']) if entry['total_weight'] else 0
+        })
     
     context = {
         # Statistiques générales
@@ -181,9 +229,12 @@ def home(request):
         'processing_stats': processing_stats,
         'top_vessels': top_vessels,
         
-        # Données pour graphiques
-        'monthly_entries': list(monthly_entries),
-        'daily_processing': list(daily_processing),
+        # Données pour graphiques - FIXED: Now properly serializable
+        'monthly_entries': monthly_entries,
+        'daily_processing': daily_processing,
+        'document_status_data': document_status_data,
+        'top_container_types': list(top_container_types),
+        'monthly_weight_data': monthly_weight_data,
         
         # Pourcentages
         'processing_percentage': round((processed_documents / total_documents * 100) if total_documents > 0 else 0, 1),

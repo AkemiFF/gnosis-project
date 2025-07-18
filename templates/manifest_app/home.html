@@ -206,6 +206,7 @@
                     <div class="p-4 sm:p-6">
                         <div class="h-48 sm:h-64">
                             <canvas id="monthlyChart" class="w-full h-full"></canvas>
+                            <div id="monthlyChartNoData" class="hidden text-center text-gray-500 py-6">Aucune donnée disponible pour ce graphique.</div>
                         </div>
                     </div>
                 </div>
@@ -218,7 +219,47 @@
                     <div class="p-4 sm:p-6">
                         <div class="h-48 sm:h-64">
                             <canvas id="dailyChart" class="w-full h-full"></canvas>
+                            <div id="dailyChartNoData" class="hidden text-center text-gray-500 py-6">Aucune donnée disponible pour ce graphique.</div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- NEW: Documents par statut -->
+                <div class="bg-white shadow-sm rounded-lg">
+                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                        <h3 class="text-sm sm:text-base font-medium text-gray-900">Documents par statut</h3>
+                    </div>
+                    <div class="p-4 sm:p-6">
+                        <div class="h-48 sm:h-64">
+                            <canvas id="documentStatusChart" class="w-full h-full"></canvas>
+                            <div id="documentStatusChartNoData" class="hidden text-center text-gray-500 py-6">Aucune donnée disponible pour ce graphique.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEW: Top Types de Conteneurs -->
+                <div class="bg-white shadow-sm rounded-lg">
+                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                        <h3 class="text-sm sm:text-base font-medium text-gray-900">Top Types de Conteneurs</h3>
+                    </div>
+                    <div class="p-4 sm:p-6">
+                        <div class="h-48 sm:h-64">
+                            <canvas id="containerTypeChart" class="w-full h-full"></canvas>
+                            <div id="containerTypeChartNoData" class="hidden text-center text-gray-500 py-6">Aucune donnée disponible pour ce graphique.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW: Poids Total des Cargaisons par Mois -->
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                    <h3 class="text-sm sm:text-base font-medium text-gray-900">Poids Total des Cargaisons par Mois</h3>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <div class="h-48 sm:h-64">
+                        <canvas id="monthlyWeightChart" class="w-full h-full"></canvas>
+                        <div id="monthlyWeightChartNoData" class="hidden text-center text-gray-500 py-6">Aucune donnée disponible pour ce graphique.</div>
                     </div>
                 </div>
             </div>
@@ -380,104 +421,323 @@
     </div>
 </div>
 
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
+// Debug: Log all data to console
+console.log('=== DEBUG: Chart Data ===');
+console.log('Monthly entries:', {{ monthly_entries|safe }});
+console.log('Daily processing:', {{ daily_processing|safe }});
+console.log('Document status:', {{ document_status_data|safe }});
+console.log('Container types:', {{ top_container_types|safe }});
+console.log('Monthly weight:', {{ monthly_weight_data|safe }});
+
+// Check if Chart.js is loaded
+if (typeof Chart === 'undefined') {
+    console.error('Chart.js is not loaded!');
+    alert('Chart.js library failed to load. Please check your internet connection.');
+} else {
+    console.log('Chart.js loaded successfully, version:', Chart.version);
+}
+
 // Configuration responsive pour Chart.js
 Chart.defaults.responsive = true;
 Chart.defaults.maintainAspectRatio = false;
 
-// Graphique des entrées par mois
-const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
-const monthlyData = {{ monthly_entries|safe }};
-const monthlyLabels = monthlyData.map(item => item.month || 'N/A');
-const monthlyValues = monthlyData.map(item => item.count);
-
-new Chart(monthlyCtx, {
-    type: 'line',
-    data: {
-        labels: monthlyLabels,
-        datasets: [{
-            label: 'Entrées',
-            data: monthlyValues,
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-            borderColor: 'rgb(59, 130, 246)',
-            borderWidth: 2,
-            fill: true,
-            tension: 0.4,
-            pointBackgroundColor: 'rgb(59, 130, 246)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 4
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.05)'
-                }
-            },
-            x: {
-                grid: {
-                    display: false
-                }
-            }
-        }
+// Helper function to display "No data" message
+function displayNoDataMessage(canvasId, dataArray) {
+    console.log(`Checking data for ${canvasId}:`, dataArray);
+    const canvas = document.getElementById(canvasId);
+    const noDataMessage = document.getElementById(canvasId + 'NoData');
+    
+    if (!canvas) {
+        console.error(`Canvas element ${canvasId} not found!`);
+        return true;
     }
-});
-
-// Graphique des documents traités par jour
-const dailyCtx = document.getElementById('dailyChart').getContext('2d');
-const dailyData = {{ daily_processing|safe }};
-const dailyLabels = dailyData.map(item => {
-    const date = new Date(item.day);
-    return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' });
-});
-const dailyValues = dailyData.map(item => item.count);
-
-new Chart(dailyCtx, {
-    type: 'bar',
-    data: {
-        labels: dailyLabels,
-        datasets: [{
-            label: 'Documents traités',
-            data: dailyValues,
-            backgroundColor: 'rgba(34, 197, 94, 0.6)',
-            borderColor: 'rgb(34, 197, 94)',
-            borderWidth: 1,
-            borderRadius: 4,
-            borderSkipped: false,
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                grid: {
-                    color: 'rgba(0, 0, 0, 0.05)'
-                }
-            },
-            x: {
-                grid: {
-                    display: false
-                }
-            }
-        }
+    
+    if (!dataArray || dataArray.length === 0) {
+        console.log(`No data for ${canvasId}, showing message`);
+        canvas.style.display = 'none';
+        if (noDataMessage) noDataMessage.classList.remove('hidden');
+        return true;
+    } else {
+        console.log(`Data found for ${canvasId}, creating chart`);
+        canvas.style.display = 'block';
+        if (noDataMessage) noDataMessage.classList.add('hidden');
+        return false;
     }
+}
+
+// Function to create charts with error handling
+function createChart(canvasId, config) {
+    try {
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        return new Chart(ctx, config);
+    } catch (error) {
+        console.error(`Error creating chart ${canvasId}:`, error);
+        return null;
+    }
+}
+
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, creating charts...');
+
+    // Graphique des entrées par mois
+    const monthlyData = {{ monthly_entries|safe }};
+    if (!displayNoDataMessage('monthlyChart', monthlyData)) {
+        const monthlyLabels = monthlyData.map(item => {
+            const date = new Date(item.month);
+            return date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+        });
+        const monthlyValues = monthlyData.map(item => item.count);
+
+        createChart('monthlyChart', {
+            type: 'line',
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: 'Entrées',
+                    data: monthlyValues,
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: 'rgb(59, 130, 246)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Graphique des documents traités par jour
+    const dailyData = {{ daily_processing|safe }};
+    if (!displayNoDataMessage('dailyChart', dailyData)) {
+        const dailyLabels = dailyData.map(item => {
+            const date = new Date(item.day);
+            return date.toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' });
+        });
+        const dailyValues = dailyData.map(item => item.count);
+
+        createChart('dailyChart', {
+            type: 'bar',
+            data: {
+                labels: dailyLabels,
+                datasets: [{
+                    label: 'Documents traités',
+                    data: dailyValues,
+                    backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                    borderColor: 'rgb(34, 197, 94)',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // NEW: Graphique des documents par statut (Doughnut Chart)
+    const documentStatusData = {{ document_status_data|safe }};
+    if (!displayNoDataMessage('documentStatusChart', documentStatusData)) {
+        const documentStatusLabels = documentStatusData.map(item => item.status);
+        const documentStatusValues = documentStatusData.map(item => item.count);
+
+        createChart('documentStatusChart', {
+            type: 'doughnut',
+            data: {
+                labels: documentStatusLabels,
+                datasets: [{
+                    data: documentStatusValues,
+                    backgroundColor: [
+                        'rgba(34, 197, 94, 0.8)', // Green for Traités
+                        'rgba(250, 204, 21, 0.8)', // Yellow for En attente
+                        'rgba(239, 68, 68, 0.8)'  // Red for Erreurs
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 12,
+                            padding: 15,
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed;
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // NEW: Graphique des Top Types de Conteneurs (Bar Chart)
+    const containerTypeData = {{ top_container_types|safe }};
+    if (!displayNoDataMessage('containerTypeChart', containerTypeData)) {
+        const containerTypeLabels = containerTypeData.map(item => item.type_container);
+        const containerTypeValues = containerTypeData.map(item => item.count);
+
+        createChart('containerTypeChart', {
+            type: 'bar',
+            data: {
+                labels: containerTypeLabels,
+                datasets: [{
+                    label: 'Nombre de Conteneurs',
+                    data: containerTypeValues,
+                    backgroundColor: 'rgba(139, 92, 246, 0.7)', // Purple color
+                    borderColor: 'rgb(139, 92, 246)',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // NEW: Graphique du Poids Total des Cargaisons par Mois (Line Chart)
+    const monthlyWeightData = {{ monthly_weight_data|safe }};
+    if (!displayNoDataMessage('monthlyWeightChart', monthlyWeightData)) {
+        const monthlyWeightLabels = monthlyWeightData.map(item => {
+            const date = new Date(item.month);
+            return date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
+        });
+        const monthlyWeightValues = monthlyWeightData.map(item => item.total_weight);
+
+        createChart('monthlyWeightChart', {
+            type: 'line',
+            data: {
+                labels: monthlyWeightLabels,
+                datasets: [{
+                    label: 'Poids Total (kg)',
+                    data: monthlyWeightValues,
+                    backgroundColor: 'rgba(234, 88, 12, 0.1)', // Orange color
+                    borderColor: 'rgb(234, 88, 12)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: 'rgb(234, 88, 12)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Poids (kg)'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    console.log('All charts creation completed');
 });
 </script>
 {% endblock %}
