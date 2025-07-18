@@ -3,7 +3,6 @@ import logging
 from celery import shared_task
 
 from manifest_app.models import PDFDocument
-from manifest_app.services import AIService
 
 from .models import PDFDocument
 from .services.ai_service import AIService
