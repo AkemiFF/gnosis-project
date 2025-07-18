@@ -2,6 +2,7 @@ import json
 import mimetypes
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -16,9 +17,11 @@ from django.views.decorators.http import require_POST
 
 from .forms import PDFUploadForm, UserCreateForm
 from .models import *
+from .models import PDFDocument
 from .services.ai_service import AIService
 from .services.chatbot_service import ChatbotService
 from .services.pdf_manager import PDFManager
+from .tasks import process_pdf_ai_task
 
 
 @login_required
@@ -547,7 +550,7 @@ def upload_pdf(request):
 
 @login_required
 @require_POST
-def process_pdf_ai(request, pdf_id):
+def process_pdf_ai_2(request, pdf_id):
     """
     Lance le traitement IA d'un document PDF
     """
@@ -593,6 +596,38 @@ def process_pdf_ai(request, pdf_id):
             'error': f'Erreur inattendue: {str(e)}'
         })
 
+@login_required
+@require_POST
+def process_pdf_ai(request, pdf_id):
+    """
+    Lance le traitement IA d'un document PDF de façon asynchrone via Celery
+    """
+    pdf_doc = get_object_or_404(PDFDocument, id=pdf_id)
+    
+    if pdf_doc.processing_status == 'processing':
+        return JsonResponse({
+            'success': False,
+            'error': 'Le document est déjà en cours de traitement'
+        })
+
+    if not hasattr(settings, 'OPENAI_API_KEY') or not settings.OPENAI_API_KEY or settings.OPENAI_API_KEY == 'your-openai-api-key-here':
+        return JsonResponse({
+            'success': False,
+            'error': 'Clé API OpenAI non configurée. Veuillez configurer OPENAI_API_KEY dans settings.py'
+        })
+
+    # Marquer le document comme en traitement
+    pdf_doc.processing_status = 'processing'
+    pdf_doc.save()
+
+    # Lancer la tâche asynchrone
+    process_pdf_ai_task.delay(pdf_doc.id)
+
+    return JsonResponse({
+        'success': True,
+        'message': 'Le traitement du document a été lancé. Vous recevrez une notification une fois terminé.'
+    })
+    
 @login_required
 def pdf_results(request, pdf_id):
     """

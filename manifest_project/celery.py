@@ -11,6 +11,7 @@ app = Celery('manifest_project')
 
 # Charger config depuis les settings de Django
 app.config_from_object('django.conf:settings', namespace='CELERY')
+app.conf.broker_connection_retry_on_startup = True
 
 # Découvrir les tâches dans tous les apps Django
 app.autodiscover_tasks()
