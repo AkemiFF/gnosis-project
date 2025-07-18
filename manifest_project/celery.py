@@ -3,6 +3,7 @@
 import os
 
 from celery import Celery
+from django.http import HttpResponse
 
 # 1) Définir le module settings de Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'manifest_project.settings')
@@ -22,3 +23,4 @@ app.autodiscover_tasks()
 def debug_task(self):
     # remplace le print par un logger si tu veux
     print(f'Request: {self.request!r}')
+    return HttpResponse("Tâche debug lancée !")
