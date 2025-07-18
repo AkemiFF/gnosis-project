@@ -2396,3 +2396,16 @@ INFO "GET /documents/upload/ HTTP/1.1" 200 17805
 [2025-07-18 19:48:33,743] WARNING django.server - "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 9502
 [2025-07-18 19:49:34,123] INFO django.utils.autoreload - /home/akemi/Bureau/Gnosis/v3/manifest_project/settings.py changed, reloading.
 [2025-07-18 19:49:35,374] INFO django.utils.autoreload - Watching for file changes with StatReloader
+[2025-07-18 19:58:19,741] INFO django.utils.autoreload - /home/akemi/Bureau/Gnosis/v3/manifest_project/settings.py changed, reloading.
+[2025-07-18 19:58:21,815] INFO django.utils.autoreload - Watching for file changes with StatReloader
+[2025-07-18 19:58:50,433] INFO django.utils.autoreload - /home/akemi/Bureau/Gnosis/v3/manifest_app/views.py changed, reloading.
+[2025-07-18 19:58:52,721] INFO django.utils.autoreload - Watching for file changes with StatReloader
+[2025-07-18 19:59:02,477] INFO django.server - "GET / HTTP/1.1" 200 45592
+[2025-07-18 20:01:14,192] INFO django.utils.autoreload - /home/akemi/Bureau/Gnosis/v3/manifest_app/views.py changed, reloading.
+[2025-07-18 20:01:15,958] INFO django.utils.autoreload - Watching for file changes with StatReloader
+[2025-07-18 20:01:50,467] INFO django.utils.autoreload - /home/akemi/Bureau/Gnosis/v3/manifest_app/views.py changed, reloading.
+[2025-07-18 20:01:52,347] INFO django.utils.autoreload - Watching for file changes with StatReloader
+[2025-07-18 20:05:31,039] INFO django.server - "GET /documents/ HTTP/1.1" 200 19391
+[2025-07-18 20:05:33,783] INFO django.server - "GET /containers/ HTTP/1.1" 200 95060
+[2025-07-18 20:05:36,504] INFO django.server - "GET /documents/ HTTP/1.1" 200 19391
+[2025-07-18 20:05:49,673] INFO django.server - "GET / HTTP/1.1" 200 45592
