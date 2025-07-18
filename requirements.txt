@@ -7,3 +7,5 @@ PyMuPDF>=1.23.0
 python-dotenv>=1.0.0
 celery
 gunicorn
+psycopg>=3.1
+psycopg2-binary>=2.9
