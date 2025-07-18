@@ -112,7 +112,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': str(BASE_DIR / 'logs/django.log'),
-            'formatter': 'verbose',  # <== ici
+            'formatter': 'verbose',
         },
     },
     'loggers': {
@@ -123,6 +123,7 @@ LOGGING = {
         },
     },
 }
+
 
 # Ensure the logs directory exists
 os.makedirs(BASE_DIR / 'logs', exist_ok=True)
