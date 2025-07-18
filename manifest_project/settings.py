@@ -160,3 +160,4 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_BROKER_USE_SSL = {
     'ssl_cert_reqs': 0  
 }
+CELERY_TASK_ALWAYS_EAGER = False
