@@ -65,7 +65,7 @@ DATABASES = {
         'NAME': os.getenv('DB_NAME', 'gnosis'),
         'USER': os.getenv('DB_USER', 'gnosis'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'a8ssY7dddfRJFeVOso53CdJTDeEhWvri'),
-        'HOST': os.getenv('DB_HOST', 'dpg-d1t4026r433s73ev8qjg-a.oregon-postgres.render.com'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
