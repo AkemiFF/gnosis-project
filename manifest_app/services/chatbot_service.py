@@ -293,8 +293,8 @@ class ChatbotService:
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": context}
                 ],
-                temperature=0.3,
-                max_tokens=5000
+                temperature=0.4,
+                # max_tokens=5000
             )
             
             return response.choices[0].message.content.strip()
