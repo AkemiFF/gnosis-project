@@ -294,7 +294,7 @@ class ChatbotService:
                     {"role": "user", "content": context}
                 ],
                 temperature=0.3,
-                max_tokens=600
+                max_tokens=5000
             )
             
             return response.choices[0].message.content.strip()
