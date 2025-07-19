@@ -25,6 +25,8 @@ class ChatbotService:
         
         self.client = OpenAI(api_key=api_key)
         self.model = "gpt-3.5-turbo"
+        self.model_2 = "gpt-4o"
+
     
     def get_database_schema(self):
         """
@@ -288,7 +290,7 @@ class ChatbotService:
         
         try:
             response = self.client.chat.completions.create(
-                model=self.model,
+                model=self.model_2,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": context}
