@@ -10,7 +10,8 @@ class Category(models.Model):
     parent = models.ForeignKey(
         'self', null=True, blank=True,
         on_delete=models.CASCADE,
-        help_text="Lien vers la catégorie parente (sub-catégorie si renseignée)."
+        help_text="Lien vers la catégorie parente (sub-catégorie si renseignée).",
+        related_name='subcategories'
     )
 
     def __str__(self):

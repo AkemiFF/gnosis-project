@@ -85,12 +85,13 @@ class ChatbotService:
             },
             "ContainerContent": {
                 "fields": [
-                    "id", "container", "produit", "description", "code_hs", "quantite", "unite", "poids", "volume",
+                    "id", "container", "produit", "description", "code_hs","categories", "quantite", "unite", "poids", "volume",
                     "valeur", "devise", "pays_origine", "marques_numeros"
                 ],
-                "description": "Contenu détaillé des containers",
+                "description": "Contenu détaillé des containers, avec des produits liés à une ou plusieurs catégories (ManyToMany)",
                 "relations": {
-                    "container": "Container"
+                    "container": "Container",
+                    "categories": "Category"
                 }
             },
             
@@ -144,6 +145,7 @@ class ChatbotService:
         6. Pour les listes, limite à 20 résultats maximum avec [:20]
         7. Convertis les QuerySets en listes avec list() si nécessaire
         8. Pour les agrégations, utilise .values() pour obtenir des dictionnaires
+        9. Toujours faire comme "Model.objects.filter(field__icontains='terme')" pour les recherches
         
         Exemples de patterns :
         - Recherche : Model.objects.filter(field__icontains='terme')
@@ -156,7 +158,7 @@ class ChatbotService:
         
         try:
             response = self.client.chat.completions.create(
-                model=self.model,
+                model=self.model_2,
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": f"Requête utilisateur: {user_query}"}
