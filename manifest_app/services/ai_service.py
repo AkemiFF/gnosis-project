@@ -1,8 +1,11 @@
 import io
 import json
+import logging
 import os
 import tempfile
+import time
 from datetime import datetime
+from io import BytesIO
 from typing import Dict, List, Optional, Union
 
 import openai
@@ -14,6 +17,7 @@ from ..models import (Category, Consigne, Container, ContainerContent,
                       ManifestEntry, PDFDocument, Shipper, Vessel)
 from .pdf_manager import PDFManager
 
+logger = logging.getLogger(__name__)
 
 def _format_table(table: List[List[str]]) -> str:
     """
@@ -94,7 +98,7 @@ class AIService:
         if mode == 'pdf':
             # Construction du PDF réduit et envoi direct à l'IA
             pdf_bytes = self.pdf_manager.create_pdf_subset(pdf_record, min(pages), max(pages))
-            return self.parse_pdf_file(pdf_bytes)
+            return self.parse_pdf(pdf_bytes)
         
         # mode 'text' - fallback
         segments = []
@@ -156,7 +160,7 @@ class AIService:
             "    - code_hs (code HS si disponible)\n"
             "    - pays_origine (pays d'origine)\n\n"
             "    - categories (liste de chaînes) : \n"
-    "               Pour chaque contenu, l’IA doit choisir UNE OU PLUSIEURS catégories parmi CE LISTING EXACT :\n"
+    "               Pour chaque contenu, l'IA doit choisir UNE OU PLUSIEURS catégories parmi CE LISTING EXACT :\n"
     "               Produits alimentaires / denrées alimentaires : Riz, Sucre, Farine, Légumineuses, Huile de cuisson, Produits en conserve, Épices, Boissons  \n"
     "               Matériaux de construction : Ciment, Plâtre, Sable, Tuiles, Marbre, Fer  \n"
     "               Emballages et contenants : Sacs vides, Fûts, Cartons, Palettes  \n"
@@ -165,7 +169,7 @@ class AIService:
     "               Équipements et pièces détachées : Équipements électroniques, Pièces mécaniques, Générateurs, Panneaux solaires  \n"
     "               Véhicules et pièces automobiles : Pneus, Batteries, Motos, Pièces de rechange  \n"
     "               Articles ménagers : Meubles, Appareils électroménagers, Matelas, Literie  \n"
-    "               Papeterie et fournitures de bureau : Cahiers, Stylos, Imprimantes, Cartouches d’encre  \n"
+    "               Papeterie et fournitures de bureau : Cahiers, Stylos, Imprimantes, Cartouches d'encre  \n"
     "               Médicaments et produits médicaux : Médicaments, Équipements de soin, Gants, Masques  \n"
             "IMPORTANT :\n"
             "- Extrait TOUS les containers trouvés avec leurs numéros complets\n"
@@ -173,8 +177,9 @@ class AIService:
             "- Extrait les dimensions si disponibles\n"
             "- Identifie le contenu de chaque container\n"
             "- Si plusieurs éléments sont détectés, renvoie une liste JSON\n"
-            "- Utilise null pour les valeurs manquantes\n\n"
-            "- Une content dois avoir au moins un produit (nom du produit) \n\n"
+            "- Utilise null pour les valeurs manquantes\n"
+            "- Une content dois avoir au moins un produit (nom du produit) \n"
+            "- Une Container dois avoir au moins une numero \n\n"
             "Contenu à analyser:\n" + text
         )
         
@@ -206,40 +211,148 @@ class AIService:
         except Exception as e:
             print(f"API error: {e}")
             return {"error": f"API error: {str(e)}"}
+        
+    def parse_pdf(self, pdf_bytes: bytes) -> Union[dict, List[dict]]:
+        """
+        Envoie un fichier PDF directement à l'API OpenAI via la nouvelle API responses
+        """
+        try:
+            print("Uploading PDF to OpenAI Files API...")
+        
+            # 1. Upload du PDF via Files API avec purpose="user_data"
+            file_response = self.client.files.create(
+                file=("manifest.pdf", BytesIO(pdf_bytes), "application/pdf"),
+                purpose="user_data"
+            )
+        
+            file_id = file_response.id
+            print(f"PDF uploaded with file ID: {file_id}")
+        
+            # 2. Préparer le prompt d'analyse
+            analysis_prompt = """
+            Analyse ce document PDF de manifeste maritime et retourne en JSON un ou plusieurs objets avec les champs suivants :
+
+            POUR LES ENTRÉES DE MANIFESTE :
+            - Name (texte, nom du navire)
+            - Flag (code pays du navire)
+            - Produits (texte, liste des produits séparés par des virgules)
+            - Volume (nombre, en m3)
+            - Poids (nombre, en kg)
+            - DATE (date au format YYYY-MM-DD)
+            - Page (nombre, le numéro de page)
+            - Shipper (nom de l'expéditeur)
+            - Consigne (nom du consignataire)
+
+            POUR LES CONTAINERS :
+            - Containers (liste d'objets avec les champs suivants) :
+              * numero (numéro du container, ex: MSKU1234567)
+              * type_container (type, ex: 20GP, 40GP, 40HC, 20RF, etc.)
+              * poids_brut (poids brut en kg)
+              * poids_net (poids net en kg)
+              * poids_tare (tare en kg)
+              * volume (volume en m³)
+              * longueur (longueur en mètres)
+              * largeur (longueur en mètres)
+              * hauteur (hauteur en mètres)
+              * notify_party (celui qui doit être informé à l'arrivée de la marchandise)
+              * statut (loaded, empty, damaged, maintenance, unknown)
+              * port_chargement (port de chargement)
+              * port_dechargement (port de déchargement)
+              * contents (liste des contenus du container avec) :
+                - produit (nom du produit)
+                - description (description détaillée)
+                - quantite (quantité)
+                - unite (unité de mesure)
+                - poids (poids en kg)
+                - volume (volume en m³)
+                - valeur (valeur monétaire)
+                - devise (devise)
+                - code_hs (code HS si disponible)
+                - pays_origine (pays d'origine)
+                - categories (liste de chaînes) : 
+                   Pour chaque contenu, choisis UNE OU PLUSIEURS catégories parmi CE LISTING EXACT :
+                   Produits alimentaires / denrées alimentaires : Riz, Sucre, Farine, Légumineuses, Huile de cuisson, Produits en conserve, Épices, Boissons  
+                   Matériaux de construction : Ciment, Plâtre, Sable, Tuiles, Marbre, Fer  
+                   Emballages et contenants : Sacs vides, Fûts, Cartons, Palettes  
+                   Produits chimiques et industriels : Peintures, Détergents, Lubrifiants, Résines, Engrais  
+                   Textiles et vêtements : T-shirts, Jeans, Uniformes, Vêtements de seconde main  
+                   Équipements et pièces détachées : Équipements électroniques, Pièces mécaniques, Générateurs, Panneaux solaires  
+                   Véhicules et pièces automobiles : Pneus, Batteries, Motos, Pièces de rechange  
+                   Articles ménagers : Meubles, Appareils électroménagers, Matelas, Literie  
+                   Papeterie et fournitures de bureau : Cahiers, Stylos, Imprimantes, Cartouches d'encre  
+                   Médicaments et produits médicaux : Médicaments, Équipements de soin, Gants, Masques  
+
+            IMPORTANT :
+            - Lis TOUS les tableaux et structures dans le document PDF
+            - Extrait TOUS les containers trouvés avec leurs numéros complets
+            - Inclut TOUTES les informations de poids (brut, net, tare)
+            - Extrait les dimensions si disponibles
+            - Identifie le contenu de chaque container
+            - Si plusieurs éléments sont détectés, renvoie une liste JSON
+            - Utilise null pour les valeurs manquantes
+            - Une content doit avoir au moins un produit (nom du produit)
+            - Un Container doit avoir au moins un numero
+            - Analyse soigneusement tous les tableaux et structures de données
+        
+            Réponds UNIQUEMENT avec du JSON valide, sans texte d'explication.
+            """
+        
+            # 3. Utiliser la nouvelle API responses
+            response = self.client.responses.create(
+                model="gpt-4o",
+                input=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "input_file",
+                                "file_id": file_id,
+                            },
+                            {
+                                "type": "input_text",
+                                "text": analysis_prompt,
+                            },
+                        ]
+                    }
+                ]
+            )
+        
+            logger.info("PDF analysis completed")
+            
+            
+            response_content = response.output_text
+            # logger.info(response_content)
+            print(f"Response: {response_content[:500]}...")
+        
+            # 5. Nettoyer le fichier uploadé
+            try:
+                self.client.files.delete(file_id)
+                print(f"Cleaned up file {file_id}")
+            except Exception as cleanup_error:
+                print(f"Cleanup error: {cleanup_error}")
+        
+            # 6. Parser la réponse JSON
+            clean_response = response_content.strip()
+            if clean_response.startswith("```json"):
+                clean_response = clean_response[7:]
+            if clean_response.endswith("```"):
+                clean_response = clean_response[:-3]
+            clean_response = clean_response.strip()
+        
+            return json.loads(clean_response)
+        
+        except json.JSONDecodeError as e:
+            print(f"JSON decode error: {e}")
+            return {"error": "Invalid JSON response", "raw": response_content}
+        except Exception as e:
+            print(f"Error in parse_pdf: {e}")
+            return {"error": f"PDF processing error: {str(e)}"}
 
     def parse_pdf_file(self, pdf_bytes: bytes) -> Union[dict, List[dict]]:
         """
-        Envoie un fichier PDF binaire directement à l'API OpenAI pour extraction.
-        Utilise l'API Vision pour analyser le PDF comme image.
+        Wrapper pour parse_pdf pour compatibilité
         """
-        try:
-            # Créer un fichier temporaire pour le PDF
-            with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as tmpf:
-                tmpf.write(pdf_bytes)
-                tmp_path = tmpf.name
-            
-            try:
-                # Extraire le texte du PDF pour l'analyse
-                reader = PdfReader(tmp_path)
-                text_content = ""
-                for i, page in enumerate(reader.pages):
-                    page_text = page.extract_text()
-                    text_content += f"--- Page {i+1} ---\n{page_text}\n\n"
-                
-                # Si on a du texte, l'analyser directement
-                if text_content.strip():
-                    return self.parse_text(text_content)
-                else:
-                    return {"error": "No text content found in PDF"}
-                    
-            finally:
-                try:
-                    os.remove(tmp_path)
-                except:
-                    pass
-                    
-        except Exception as e:
-            return {"error": f"PDF processing error: {str(e)}"}
+        return self.parse_pdf(pdf_bytes)
 
     def save_ai_results_to_database(self, pdf_record: PDFDocument, ai_results: List[dict]) -> Dict[str, int]:
         """
@@ -499,10 +612,10 @@ class AIService:
                 code_hs=content_data.get('code_hs', ''),
                 pays_origine=content_data.get('pays_origine', '')
             )
-            # —> Traitement des catégories fournies par l’IA
+            # —> Traitement des catégories fournies par l'IA
             
             for cat_name in content_data.get('categories', []):
-                # On récupère ou crée la catégorie (sans parent, car l’IA ne renvoie que le nom)
+                # On récupère ou crée la catégorie (sans parent, car l'IA ne renvoie que le nom)
                 
                 cat_obj, _ = Category.objects.get_or_create(name=cat_name)
                 cc.categories.add(cat_obj)
