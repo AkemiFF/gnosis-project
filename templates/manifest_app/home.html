@@ -196,21 +196,28 @@
                 </div>
             </div>
 
-            <!-- Graphiques avec layout responsive -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-                <!-- Entrées par mois -->
-                <div class="bg-white shadow-sm rounded-lg">
-                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
-                        <h3 class="text-sm sm:text-base font-medium text-gray-900">Entrées par mois</h3>
+            <!-- Catégories principales par mois - VERSION ÉLARGIE -->
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm sm:text-base font-medium text-gray-900">Évolution des Catégories Principales</h3>
+                        <div class="text-xs text-gray-500">6 derniers mois</div>
                     </div>
-                    <div class="p-4 sm:p-6">
-                        <div class="h-48 sm:h-64">
-                            <canvas id="monthlyChart" class="w-full h-full"></canvas>
-                            <div id="monthlyChartNoData" class="hidden text-center text-gray-500 py-6">Aucune donnée disponible pour ce graphique.</div>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <div class="h-80 sm:h-96">
+                        <canvas id="monthlyChart" class="w-full h-full"></canvas>
+                        <div id="monthlyChartNoData" class="hidden text-center text-gray-500 py-12">
+                            <i class="fas fa-chart-line text-gray-300 text-4xl mb-4"></i>
+                            <div class="text-lg font-medium">Aucune donnée disponible</div>
+                            <div class="text-sm">Les catégories apparaîtront ici une fois les données ajoutées</div>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <!-- Graphiques avec layout responsive -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                 <!-- Documents traités par jour -->
                 <div class="bg-white shadow-sm rounded-lg">
                     <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
@@ -249,17 +256,17 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- NEW: Poids Total des Cargaisons par Mois -->
-            <div class="bg-white shadow-sm rounded-lg">
-                <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
-                    <h3 class="text-sm sm:text-base font-medium text-gray-900">Poids Total des Cargaisons par Mois</h3>
-                </div>
-                <div class="p-4 sm:p-6">
-                    <div class="h-48 sm:h-64">
-                        <canvas id="monthlyWeightChart" class="w-full h-full"></canvas>
-                        <div id="monthlyWeightChartNoData" class="hidden text-center text-gray-500 py-6">Aucune donnée disponible pour ce graphique.</div>
+                <!-- NEW: Poids Total des Cargaisons par Mois -->
+                <div class="bg-white shadow-sm rounded-lg">
+                    <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                        <h3 class="text-sm sm:text-base font-medium text-gray-900">Poids Total des Cargaisons par Mois</h3>
+                    </div>
+                    <div class="p-4 sm:p-6">
+                        <div class="h-48 sm:h-64">
+                            <canvas id="monthlyWeightChart" class="w-full h-full"></canvas>
+                            <div id="monthlyWeightChartNoData" class="hidden text-center text-gray-500 py-6">Aucune donnée disponible pour ce graphique.</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -351,6 +358,22 @@
                     {% endfor %}
                 </div>
             </div>
+
+            <!-- Légende des Catégories - NOUVELLE SECTION -->
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
+                    <h3 class="text-sm sm:text-base font-medium text-gray-900">Catégories</h3>
+                </div>
+                <div class="p-4 sm:p-6">
+                    <div id="categoryLegend" class="space-y-2">
+                        <!-- Cette section sera remplie dynamiquement par JavaScript -->
+                        <div class="text-center text-gray-500 text-sm py-4">
+                            <i class="fas fa-tags text-gray-300 text-2xl mb-2"></i>
+                            <div>Aucune catégorie à afficher</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -374,7 +397,7 @@
                         </div>
                     </div>
                 </a>
-{% comment %} 
+
                 <a href="{% url 'statistiques' %}" class="group relative bg-gradient-to-br from-green-50 to-green-100 p-4 sm:p-6 rounded-lg border border-green-200 hover:border-green-300 hover:shadow-md transition-all duration-200">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -387,7 +410,7 @@
                             <p class="text-xs text-green-700 mt-1">Analyses avancées</p>
                         </div>
                     </div>
-                </a> {% endcomment %}
+                </a>
 
                 <a href="{% url 'donnees' %}" class="group relative bg-gradient-to-br from-purple-50 to-purple-100 p-4 sm:p-6 rounded-lg border border-purple-200 hover:border-purple-300 hover:shadow-md transition-all duration-200">
                     <div class="flex items-center">
@@ -427,11 +450,11 @@
 <script>
 // Debug: Log all data to console
 console.log('=== DEBUG: Chart Data ===');
-console.log('Monthly entries:', {{ monthly_entries|safe }});
-console.log('Daily processing:', {{ daily_processing|safe }});
-console.log('Document status:', {{ document_status_data|safe }});
-console.log('Container types:', {{ top_container_types|safe }});
-console.log('Monthly weight:', {{ monthly_weight_data|safe }});
+console.log('Monthly categories data:', {{ monthly_categories_data|default:"[]"|safe }});
+console.log('Daily processing:', {{ daily_processing|default:"[]"|safe }});
+console.log('Document status:', {{ document_status_data|default:"[]"|safe }});
+console.log('Container types:', {{ top_container_types|default:"[]"|safe }});
+console.log('Monthly weight:', {{ monthly_weight_data|default:"[]"|safe }});
 
 // Check if Chart.js is loaded
 if (typeof Chart === 'undefined') {
@@ -484,60 +507,249 @@ function createChart(canvasId, config) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, creating charts...');
 
-    // Graphique des entrées par mois
-    const monthlyData = {{ monthly_entries|safe }};
-    if (!displayNoDataMessage('monthlyChart', monthlyData)) {
-        const monthlyLabels = monthlyData.map(item => {
-            const date = new Date(item.month);
+    // Graphique des catégories principales par mois
+    const monthlyCategoriesData = {{ monthly_categories_data|default:"[]"|safe }};
+    console.log('Monthly categories data:', monthlyCategoriesData);
+
+    // Fonction pour obtenir les infos d'une catégorie
+    function getCategoryInfo(categoryName, index) {
+        // Mapping flexible basé sur des mots-clés
+        const categoryMappings = [
+            { keywords: ['alimentaire', 'denrée', 'riz', 'sucre', 'farine'], icon: '🥫', short: 'Alimentaire', color: 'rgb(34, 197, 94)' },
+            { keywords: ['construction', 'matériaux', 'ciment', 'plâtre', 'sable'], icon: '🧱', short: 'Construction', color: 'rgb(59, 130, 246)' },
+            { keywords: ['emballage', 'contenant', 'sac', 'fût', 'carton'], icon: '📦', short: 'Emballages', color: 'rgb(139, 92, 246)' },
+            { keywords: ['chimique', 'industriel', 'peinture', 'détergent'], icon: '🧴', short: 'Chimiques', color: 'rgb(239, 68, 68)' },
+            { keywords: ['textile', 'vêtement', 'shirt', 'jean', 'uniforme'], icon: '👕', short: 'Textiles', color: 'rgb(234, 88, 12)' },
+            { keywords: ['équipement', 'pièce', 'détachée', 'électronique'], icon: '🔌', short: 'Équipements', color: 'rgb(236, 72, 153)' },
+            { keywords: ['véhicule', 'automobile', 'pneu', 'batterie', 'moto'], icon: '🚗', short: 'Automobiles', color: 'rgb(14, 165, 233)' },
+            { keywords: ['ménager', 'meuble', 'électroménager', 'matelas'], icon: '🏠', short: 'Ménagers', color: 'rgb(168, 85, 247)' },
+            { keywords: ['papeterie', 'bureau', 'cahier', 'stylo', 'imprimante'], icon: '📚', short: 'Papeterie', color: 'rgb(16, 185, 129)' },
+            { keywords: ['médicament', 'médical', 'soin', 'gant', 'masque'], icon: '🧪', short: 'Médical', color: 'rgb(245, 101, 101)' }
+        ];
+        
+        const lowerName = categoryName.toLowerCase();
+        
+        // Chercher une correspondance basée sur les mots-clés
+        for (let mapping of categoryMappings) {
+            if (mapping.keywords.some(keyword => lowerName.includes(keyword))) {
+                return mapping;
+            }
+        }
+        
+        // Si aucune correspondance, utiliser des valeurs par défaut
+        const colors = [
+            'rgb(59, 130, 246)', 'rgb(34, 197, 94)', 'rgb(239, 68, 68)', 'rgb(139, 92, 246)',
+            'rgb(234, 88, 12)', 'rgb(236, 72, 153)', 'rgb(14, 165, 233)', 'rgb(168, 85, 247)',
+            'rgb(16, 185, 129)', 'rgb(245, 101, 101)'
+        ];
+        
+        return {
+            icon: '📊',
+            short: categoryName.length > 12 ? categoryName.substring(0, 12) + '...' : categoryName,
+            color: colors[index % colors.length]
+        };
+    }
+
+    if (!displayNoDataMessage('monthlyChart', monthlyCategoriesData)) {
+        // Préparer les datasets pour chaque catégorie
+        const datasets = [];
+        const legendItems = [];
+        
+        // Collecter tous les mois uniques
+        const allMonths = new Set();
+        monthlyCategoriesData.forEach(categoryData => {
+            categoryData.data.forEach(item => {
+                if (item.month) allMonths.add(item.month);
+            });
+        });
+        
+        const sortedMonths = Array.from(allMonths).sort();
+        const monthLabels = sortedMonths.map(month => {
+            const date = new Date(month);
             return date.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' });
         });
-        const monthlyValues = monthlyData.map(item => item.count);
-
-        createChart('monthlyChart', {
-            type: 'line',
-            data: {
-                labels: monthlyLabels,
-                datasets: [{
-                    label: 'Entrées',
-                    data: monthlyValues,
-                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                    borderColor: 'rgb(59, 130, 246)',
-                    borderWidth: 2,
-                    fill: true,
+        
+        // Créer un dataset pour chaque catégorie
+        monthlyCategoriesData.forEach((categoryData, index) => {
+            const categoryName = categoryData.category_name;
+            const mapping = getCategoryInfo(categoryName, index);
+        
+            const dataPoints = sortedMonths.map(month => {
+                const found = categoryData.data.find(item => item.month === month);
+                return found ? found.count : 0;
+            });
+        
+            // Calculer le total pour cette catégorie
+            const total = dataPoints.reduce((sum, val) => sum + val, 0);
+        
+            if (total > 0) { // Seulement afficher les catégories avec des données
+                datasets.push({
+                    label: `${mapping.icon} ${mapping.short}`,
+                    data: dataPoints,
+                    backgroundColor: mapping.color.replace('rgb', 'rgba').replace(')', ', 0.1)'),
+                    borderColor: mapping.color,
+                    borderWidth: 3,
+                    fill: false,
                     tension: 0.4,
-                    pointBackgroundColor: 'rgb(59, 130, 246)',
+                    pointBackgroundColor: mapping.color,
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    pointRadius: 4
-                }]
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                });
+            
+                // Ajouter à la légende personnalisée
+                legendItems.push({
+                    icon: mapping.icon,
+                    short: mapping.short,
+                    full: categoryName,
+                    color: mapping.color,
+                    total: total
+                });
+            }
+        });
+
+        // Si aucune donnée, afficher un message
+        if (datasets.length === 0) {
+            displayNoDataMessage('monthlyChart', []);
+            return;
+        }
+
+        // Créer le graphique
+        const chart = createChart('monthlyChart', {
+            type: 'line',
+            data: {
+                labels: monthLabels,
+                datasets: datasets
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
+                        display: false // On utilise notre légende personnalisée dans la sidebar
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#fff',
+                        bodyColor: '#fff',
+                        borderColor: 'rgba(255, 255, 255, 0.2)',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        displayColors: true,
+                        callbacks: {
+                            title: function(context) {
+                                return `Mois: ${context[0].label}`;
+                            },
+                            label: function(context) {
+                                const categoryName = context.dataset.label;
+                                const value = context.parsed.y;
+                                return `${categoryName}: ${value} éléments`;
+                            }
+                        }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Nombre d\'éléments',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
                         grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
                         }
                     },
                     x: {
+                        title: {
+                            display: true,
+                            text: 'Période',
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        },
                         grid: {
                             display: false
+                        },
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
                         }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                },
+                elements: {
+                    line: {
+                        borderJoinStyle: 'round'
+                    },
+                    point: {
+                        hoverBorderWidth: 3
                     }
                 }
             }
         });
+        
+        // Créer la légende personnalisée dans la sidebar
+        const legendContainer = document.getElementById('categoryLegend');
+        if (legendContainer && legendItems.length > 0) {
+            legendContainer.innerHTML = legendItems.map((item, index) => `
+                <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" 
+                     title="${item.full} (${item.total} éléments au total)"
+                     data-legend-index="${index}">
+                    <span class="text-xl flex-shrink-0">${item.icon}</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-gray-900 truncate">${item.short}</div>
+                        <div class="text-xs text-gray-500">${item.total} total</div>
+                    </div>
+                    <div class="w-4 h-4 rounded-full flex-shrink-0" style="background-color: ${item.color}"></div>
+                </div>
+            `).join('');
+            
+            // Ajouter l'interactivité à la légende
+            legendContainer.querySelectorAll('[data-legend-index]').forEach((legendItem, index) => {
+                legendItem.addEventListener('click', function() {
+                    const meta = chart.getDatasetMeta(index);
+                    meta.hidden = meta.hidden === null ? !chart.data.datasets[index].hidden : null;
+                    chart.update();
+                    
+                    // Mettre à jour l'apparence de l'élément de légende
+                    this.style.opacity = meta.hidden ? '0.5' : '1';
+                });
+            });
+        }
+    } else {
+        // Si pas de données, afficher le message par défaut dans la légende
+        const legendContainer = document.getElementById('categoryLegend');
+        if (legendContainer) {
+            legendContainer.innerHTML = `
+                <div class="text-center text-gray-500 text-sm py-4">
+                    <i class="fas fa-tags text-gray-300 text-2xl mb-2"></i>
+                    <div>Aucune catégorie à afficher</div>
+                </div>
+            `;
+        }
     }
 
     // Graphique des documents traités par jour
-    const dailyData = {{ daily_processing|safe }};
+    const dailyData = {{ daily_processing|default:"[]"|safe }};
     if (!displayNoDataMessage('dailyChart', dailyData)) {
         const dailyLabels = dailyData.map(item => {
             const date = new Date(item.day);
@@ -585,7 +797,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // NEW: Graphique des documents par statut (Doughnut Chart)
-    const documentStatusData = {{ document_status_data|safe }};
+    const documentStatusData = {{ document_status_data|default:"[]"|safe }};
     if (!displayNoDataMessage('documentStatusChart', documentStatusData)) {
         const documentStatusLabels = documentStatusData.map(item => item.status);
         const documentStatusValues = documentStatusData.map(item => item.count);
@@ -636,7 +848,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // NEW: Graphique des Top Types de Conteneurs (Bar Chart)
-    const containerTypeData = {{ top_container_types|safe }};
+    const containerTypeData = {{ top_container_types|default:"[]"|safe }};
     if (!displayNoDataMessage('containerTypeChart', containerTypeData)) {
         const containerTypeLabels = containerTypeData.map(item => item.type_container);
         const containerTypeValues = containerTypeData.map(item => item.count);
@@ -681,7 +893,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // NEW: Graphique du Poids Total des Cargaisons par Mois (Line Chart)
-    const monthlyWeightData = {{ monthly_weight_data|safe }};
+    const monthlyWeightData = {{ monthly_weight_data|default:"[]"|safe }};
     if (!displayNoDataMessage('monthlyWeightChart', monthlyWeightData)) {
         const monthlyWeightLabels = monthlyWeightData.map(item => {
             const date = new Date(item.month);
