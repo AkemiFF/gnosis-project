@@ -98,7 +98,7 @@ class Container(models.Model):
     consigne = models.ForeignKey(Consigne, on_delete=models.SET_NULL, null=True, blank=True)
     pdf_document = models.ForeignKey(PDFDocument, on_delete=models.CASCADE)
     page = models.IntegerField(default=1)
-    notify_party = models.CharField(max_length=200, blank=True)
+    notify_party = models.CharField(max_length=200, blank=True,null=True)
     # Poids et dimensions
     poids_brut = models.DecimalField(
         max_digits=10, 
