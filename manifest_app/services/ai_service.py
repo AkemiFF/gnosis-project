@@ -299,7 +299,7 @@ class AIService:
         
             # 3. Utiliser la nouvelle API responses
             response = self.client.responses.create(
-                model="gpt-4o",
+                model="gpt-4.1",
                 input=[
                     {
                         "role": "user",

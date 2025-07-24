@@ -4,7 +4,9 @@
 *.pyd
 __pycache__/
 *.so
-
+__pycache__
+__pycache__/*
+*/__pycache__
 # Django migrations
 
 
