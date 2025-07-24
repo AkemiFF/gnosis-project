@@ -44,3 +44,5 @@ class ContainerContentAdmin(admin.ModelAdmin):
     list_display = ['container', 'code_hs']
     list_filter = ['container']
     search_fields = ['description', 'container__container_number']
+
+admin.site.register(Category)

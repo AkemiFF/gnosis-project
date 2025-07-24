@@ -5,6 +5,17 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    parent = models.ForeignKey(
+        'self', null=True, blank=True,
+        on_delete=models.CASCADE,
+        help_text="Lien vers la catégorie parente (sub-catégorie si renseignée)."
+    )
+
+    def __str__(self):
+        return f"{self.parent.name + ' > ' if self.parent else ''}{self.name}"
+    
 class Vessel(models.Model):
     name = models.CharField(max_length=200)
     flag = models.CharField(max_length=100)
@@ -87,7 +98,7 @@ class Container(models.Model):
     consigne = models.ForeignKey(Consigne, on_delete=models.SET_NULL, null=True, blank=True)
     pdf_document = models.ForeignKey(PDFDocument, on_delete=models.CASCADE)
     page = models.IntegerField(default=1)
-    
+    notify_party = models.CharField(max_length=200, blank=True)
     # Poids et dimensions
     poids_brut = models.DecimalField(
         max_digits=10, 
@@ -161,6 +172,7 @@ class ContainerContent(models.Model):
     produit = models.CharField(max_length=255,blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     code_hs = models.CharField(max_length=20, blank=True,null=True)
+    categories = models.ManyToManyField(Category, blank=True)
     quantite = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 

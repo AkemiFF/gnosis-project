@@ -2,6 +2,11 @@
 
 {% block title %}Assistant IA Avancé - Manifest Management{% endblock %}
 
+{% block extra_head %}
+<!-- Include Tailwind Typography for Markdown styling -->
+
+{% endblock %}
+
 {% block content %}
 <div class="max-w-6xl mx-auto space-y-4 md:space-y-6">
     <!-- Header -->
@@ -44,14 +49,15 @@
                         </div>
                         <div class="flex-1">
                             <div class="bg-blue-50 rounded-lg p-3">
-                                <p class="text-sm text-blue-900">
-                                    🤖 Assistant IA Avancé activé ! Je génère automatiquement du code Python pour analyser vos données de manifeste.
-                                    <br><br>
-                                    Posez-moi des questions comme :
-                                    <br>• "Combien de navires français sont enregistrés ?"
-                                    <br>• "Quels sont les produits les plus lourds ?"
-                                    <br>• "Statistiques par pays"
-                                </p>
+                                <div class="text-sm text-blue-900 prose prose-sm max-w-none">
+                                    <p>🤖 <strong>Assistant IA Avancé activé !</strong> Je génère automatiquement du code Python pour analyser vos données de manifeste.</p>
+                                    <p>Posez-moi des questions comme :</p>
+                                    <ul>
+                                        <li>"Combien de navires français sont enregistrés ?"</li>
+                                        <li>"Quels sont les produits les plus lourds ?"</li>
+                                        <li>"Statistiques par pays"</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -82,7 +88,9 @@
                         </div>
                         <div class="flex-1 max-w-xs sm:max-w-md lg:max-w-lg">
                             <div class="bg-gray-100 rounded-lg p-3">
-                                <p class="text-sm text-gray-900 whitespace-pre-wrap">{{ chat.response }}</p>
+                                <div class="text-sm text-gray-900 prose prose-sm max-w-none markdown-content">
+                                    {{ chat.response|safe }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -164,12 +172,104 @@
                             <li>"Poids total par pays"</li>
                             <li>"Documents traités aujourd'hui"</li>
                         </ul>
+                        <p class="mt-2"><strong>Format Markdown supporté :</strong></p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>**Gras**, *Italique*</li>
+                            <li>Listes à puces et numérotées</li>
+                            <li>Tableaux et code</li>
+                            <li>Liens et images</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+/* Custom styles for Markdown content */
+.markdown-content {
+    line-height: 1.6;
+}
+
+.markdown-content h1, .markdown-content h2, .markdown-content h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.markdown-content h1 { font-size: 1.25rem; }
+.markdown-content h2 { font-size: 1.125rem; }
+.markdown-content h3 { font-size: 1rem; }
+
+.markdown-content p {
+    margin-bottom: 0.75rem;
+}
+
+.markdown-content ul, .markdown-content ol {
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+}
+
+.markdown-content li {
+    margin-bottom: 0.25rem;
+}
+
+.markdown-content code {
+    background-color: #f3f4f6;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-family: 'Courier New', monospace;
+}
+
+.markdown-content pre {
+    background-color: #f3f4f6;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 0.75rem;
+}
+
+.markdown-content pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.75rem;
+}
+
+.markdown-content th, .markdown-content td {
+    border: 1px solid #d1d5db;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.markdown-content th {
+    background-color: #f9fafb;
+    font-weight: 600;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid #d1d5db;
+    padding-left: 1rem;
+    margin-left: 0;
+    margin-bottom: 0.75rem;
+    color: #6b7280;
+}
+
+.markdown-content a {
+    color: #3b82f6;
+    text-decoration: underline;
+}
+
+.markdown-content a:hover {
+    color: #1d4ed8;
+}
+</style>
 
 <script>
 let debugMode = false;
@@ -179,6 +279,17 @@ const messageInput = document.getElementById('messageInput');
 const sendButton = document.getElementById('sendButton');
 const debugPanel = document.getElementById('debugPanel');
 const debugContent = document.getElementById('debugContent');
+
+// Configure Marked.js options
+if (typeof marked !== 'undefined') {
+    marked.setOptions({
+        breaks: true,
+        gfm: true,
+        sanitize: false,
+        smartLists: true,
+        smartypants: true
+    });
+}
 
 // Toggle debug mode
 function toggleDebugMode() {
@@ -193,6 +304,16 @@ function toggleDebugMode() {
 // Auto-scroll vers le bas
 function scrollToBottom() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Render Markdown content
+function renderMarkdown(content) {
+    if (typeof marked !== 'undefined') {
+        return marked.parse(content);
+    } else {
+        // Fallback si Marked.js n'est pas chargé
+        return content.replace(/\n/g, '<br>');
+    }
 }
 
 // Ajouter un message à la conversation
@@ -227,6 +348,10 @@ function addMessage(message, isUser = false, isLoading = false, debugInfo = null
             `;
         }
         
+        const renderedMessage = isLoading ? 
+            '<div class="flex items-center space-x-2"><i class="fas fa-cogs fa-spin text-blue-500"></i><span class="text-sm text-gray-600">Génération et exécution du code...</span></div>' :
+            `<div class="text-sm text-gray-900 prose prose-sm max-w-none markdown-content">${renderMarkdown(message)}</div>`;
+        
         messageDiv.innerHTML = `
             <div class="flex-shrink-0">
                 <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
@@ -235,10 +360,7 @@ function addMessage(message, isUser = false, isLoading = false, debugInfo = null
             </div>
             <div class="flex-1 max-w-xs sm:max-w-md lg:max-w-lg">
                 <div class="bg-gray-100 rounded-lg p-3">
-                    ${isLoading ? 
-                        '<div class="flex items-center space-x-2"><i class="fas fa-cogs fa-spin text-blue-500"></i><span class="text-sm text-gray-600">Génération et exécution du code...</span></div>' :
-                        `<p class="text-sm text-gray-900 whitespace-pre-wrap">${message}</p>`
-                    }
+                    ${renderedMessage}
                 </div>
                 ${debugHtml}
             </div>
@@ -303,7 +425,7 @@ async function sendMessage(message) {
                 results: data.raw_results
             });
         } else {
-            addMessage(`❌ Erreur: ${data.error}`, false);
+            addMessage(`❌ **Erreur:** ${data.error}`, false);
             
             if (debugMode && data.code) {
                 debugContent.innerHTML = `
@@ -316,7 +438,7 @@ async function sendMessage(message) {
         }
     } catch (error) {
         loadingMessage.remove();
-        addMessage('❌ Erreur de connexion. Veuillez réessayer.', false);
+        addMessage('❌ **Erreur de connexion.** Veuillez réessayer.', false);
         console.error('Erreur:', error);
     } finally {
         // Réactiver l'input
@@ -378,5 +500,15 @@ messageInput.focus();
 
 // Scroll initial vers le bas
 scrollToBottom();
+
+// Render existing markdown content on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const existingMarkdownElements = document.querySelectorAll('.markdown-content');
+    existingMarkdownElements.forEach(element => {
+        if (element.textContent && !element.innerHTML.includes('<')) {
+            element.innerHTML = renderMarkdown(element.textContent);
+        }
+    });
+});
 </script>
 {% endblock %}

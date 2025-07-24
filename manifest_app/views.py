@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import Avg, Count, Q, Sum
+from django.db.models import Avg, Count, Max, Min, Q, Sum
 from django.db.models.functions import TruncDay, TruncMonth
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -96,7 +96,6 @@ def create_user(request):
         form = UserCreateForm()
     
     return render(request, 'manifest_app/create_user.html', {'form': form})
-
 @login_required
 def home(request):
     # Statistiques générales
@@ -134,31 +133,84 @@ def home(request):
         total_volume=Sum('volume')
     ).order_by('-entries_count')[:5]
     
-    # Données pour les graphiques
-    # Entrées par mois (6 derniers mois) - FIXED: Convert datetime to string
-    six_months_ago = now() - timedelta(days=200)  
-    monthly_entries_raw = ManifestEntry.objects.filter(
-        date__gte=six_months_ago
-    ).annotate(
-        month=TruncMonth('date')
-    ).values(
-        'month'
-    ).annotate(
-        count=Count('id')
-    ).order_by('month')
+    # FIXED: Données pour les graphiques - Utiliser les dates réelles des données
+    # Trouver la plage de dates réelle des données
+    date_range = ManifestEntry.objects.aggregate(
+        min_date=Min('date'),
+        max_date=Max('date')
+    )
     
-    # Convert datetime objects to strings for JSON serialization
-    monthly_entries = []
-    for entry in monthly_entries_raw:
-        monthly_entries.append({
-            'month': entry['month'].strftime('%Y-%m-01') if entry['month'] else None,
-            'count': entry['count']
-        })
+    # Si on a des données, utiliser les 6 derniers mois à partir de la date max
+    # Sinon, utiliser les 6 derniers mois à partir d'aujourd'hui
+    if date_range['max_date']:
+        end_date = date_range['max_date']
+        start_date = end_date - timedelta(days=180)  # 6 mois environ
+    else:
+        end_date = now().date()
+        start_date = end_date - timedelta(days=180)
     
-    # Documents traités par jour (7 derniers jours) - FIXED: Convert datetime to string
-    seven_days_ago = now() - timedelta(days=7)  
+    # MODIFIED: Catégories principales par mois au lieu des entrées par mois
+    # Trouver la plage de dates réelle des ContainerContent
+    content_date_range = ContainerContent.objects.aggregate(
+        min_date=Min('container__created_at'),
+        max_date=Max('container__created_at')
+    )
+
+    # Si on a des données, utiliser les 6 derniers mois à partir de la date max
+    if content_date_range['max_date']:
+        content_end_date = content_date_range['max_date']
+        content_start_date = content_end_date - timedelta(days=180)  # 6 mois environ
+    else:
+        content_end_date = now()
+        content_start_date = content_end_date - timedelta(days=180)
+
+    # Récupérer les catégories principales (sans parent) avec leurs contenus par mois
+    main_categories = Category.objects.filter(parent__isnull=True)
+
+    # Créer les données pour le graphique des catégories par mois
+    monthly_categories_data = []
+    for category in main_categories:
+        # Compter les ContainerContent liés à cette catégorie principale par mois
+        monthly_data = ContainerContent.objects.filter(
+            categories=category,
+            container__created_at__gte=content_start_date,
+            container__created_at__lte=content_end_date
+        ).annotate(
+            month=TruncMonth('container__created_at')
+        ).values('month').annotate(
+            count=Count('id')
+        ).order_by('month')
+        
+        # Convertir en format JSON serializable
+        category_monthly_data = []
+        for entry in monthly_data:
+            category_monthly_data.append({
+                'month': entry['month'].strftime('%Y-%m-01') if entry['month'] else None,
+                'count': entry['count']
+            })
+        
+        if category_monthly_data:  # Seulement ajouter si il y a des données
+            monthly_categories_data.append({
+                'category_name': category.name,
+                'data': category_monthly_data
+            })
+    
+    # Documents traités par jour - FIXED: Utiliser les 7 derniers jours à partir de la date max des documents
+    doc_date_range = PDFDocument.objects.aggregate(
+        min_date=Min('date_ajout'),
+        max_date=Max('date_ajout')
+    )
+    
+    if doc_date_range['max_date']:
+        doc_end_date = doc_date_range['max_date'].date()
+        doc_start_date = doc_end_date - timedelta(days=7)
+    else:
+        doc_end_date = now().date()
+        doc_start_date = doc_end_date - timedelta(days=7)
+    
     daily_processing_raw = PDFDocument.objects.filter(
-        date_ajout__gte=seven_days_ago,
+        date_ajout__date__gte=doc_start_date,
+        date_ajout__date__lte=doc_end_date,
         processed=True
         ).annotate(
             day=TruncDay('date_ajout')
@@ -188,9 +240,10 @@ def home(request):
         count=Count('id')
     ).order_by('-count')[:5]
 
-    # NEW: Poids total des cargaisons par mois (6 derniers mois) - FIXED: Convert datetime to string
+    # NEW: Poids total des cargaisons par mois - FIXED: Utiliser la même plage de dates
     monthly_weight_raw = ManifestEntry.objects.filter(
-        date__gte=six_months_ago,
+        date__gte=start_date,
+        date__lte=end_date,
         poids__isnull=False
     ).annotate(
         month=TruncMonth('date')
@@ -229,8 +282,8 @@ def home(request):
         'processing_stats': processing_stats,
         'top_vessels': top_vessels,
         
-        # Données pour graphiques - FIXED: Now properly serializable
-        'monthly_entries': monthly_entries,
+        # Données pour graphiques - FIXED: Now using real date ranges
+        'monthly_categories_data': monthly_categories_data,
         'daily_processing': daily_processing,
         'document_status_data': document_status_data,
         'top_container_types': list(top_container_types),
@@ -239,9 +292,18 @@ def home(request):
         # Pourcentages
         'processing_percentage': round((processed_documents / total_documents * 100) if total_documents > 0 else 0, 1),
         'ai_extraction_percentage': round((ai_extracted_entries / total_entries * 100) if total_entries > 0 else 0, 1),
+        
+        # ADDED: Debug info for date ranges
+        'debug_date_range': {
+            'manifest_start': start_date.strftime('%Y-%m-%d') if start_date else None,
+            'manifest_end': end_date.strftime('%Y-%m-%d') if end_date else None,
+            'doc_start': doc_start_date.strftime('%Y-%m-%d') if doc_start_date else None,
+            'doc_end': doc_end_date.strftime('%Y-%m-%d') if doc_end_date else None,
+            'content_start': content_start_date.strftime('%Y-%m-%d') if content_start_date else None,
+            'content_end': content_end_date.strftime('%Y-%m-%d') if content_end_date else None,
+        }
     }
     return render(request, 'manifest_app/home.html', context)
-
 @login_required
 def statistiques(request):
     # Données pour les graphiques

@@ -10,8 +10,8 @@ from django.conf import settings
 from openai import OpenAI
 from PyPDF2 import PdfReader, PdfWriter
 
-from ..models import (Consigne, Container, ContainerContent, ManifestEntry,
-                      PDFDocument, Shipper, Vessel)
+from ..models import (Category, Consigne, Container, ContainerContent,
+                      ManifestEntry, PDFDocument, Shipper, Vessel)
 from .pdf_manager import PDFManager
 
 
@@ -140,6 +140,7 @@ class AIService:
             "  * longueur (longueur en mètres)\n"
             "  * largeur (largeur en mètres)\n"
             "  * hauteur (hauteur en mètres)\n"
+            "  * notify_party (celui qui doit être informé à l'arrivée de la marchandise)\n"
             "  * statut (loaded, empty, damaged, maintenance, unknown)\n"
             "  * port_chargement (port de chargement)\n"
             "  * port_dechargement (port de déchargement)\n"
@@ -154,6 +155,18 @@ class AIService:
             "    - devise (devise)\n"
             "    - code_hs (code HS si disponible)\n"
             "    - pays_origine (pays d'origine)\n\n"
+            "    - categories (liste de chaînes) : \n"
+    "               Pour chaque contenu, l’IA doit choisir UNE OU PLUSIEURS catégories parmi CE LISTING EXACT :\n"
+    "               Produits alimentaires / denrées alimentaires : Riz, Sucre, Farine, Légumineuses, Huile de cuisson, Produits en conserve, Épices, Boissons  \n"
+    "               Matériaux de construction : Ciment, Plâtre, Sable, Tuiles, Marbre, Fer  \n"
+    "               Emballages et contenants : Sacs vides, Fûts, Cartons, Palettes  \n"
+    "               Produits chimiques et industriels : Peintures, Détergents, Lubrifiants, Résines, Engrais  \n"
+    "               Textiles et vêtements : T-shirts, Jeans, Uniformes, Vêtements de seconde main  \n"
+    "               Équipements et pièces détachées : Équipements électroniques, Pièces mécaniques, Générateurs, Panneaux solaires  \n"
+    "               Véhicules et pièces automobiles : Pneus, Batteries, Motos, Pièces de rechange  \n"
+    "               Articles ménagers : Meubles, Appareils électroménagers, Matelas, Literie  \n"
+    "               Papeterie et fournitures de bureau : Cahiers, Stylos, Imprimantes, Cartouches d’encre  \n"
+    "               Médicaments et produits médicaux : Médicaments, Équipements de soin, Gants, Masques  \n"
             "IMPORTANT :\n"
             "- Extrait TOUS les containers trouvés avec leurs numéros complets\n"
             "- Inclut TOUTES les informations de poids (brut, net, tare)\n"
@@ -161,6 +174,7 @@ class AIService:
             "- Identifie le contenu de chaque container\n"
             "- Si plusieurs éléments sont détectés, renvoie une liste JSON\n"
             "- Utilise null pour les valeurs manquantes\n\n"
+            "- Une content dois avoir au moins un produit (nom du produit) \n\n"
             "Contenu à analyser:\n" + text
         )
         
@@ -472,7 +486,7 @@ class AIService:
                 except (ValueError, TypeError):
                     return None
             
-            ContainerContent.objects.create(
+            cc = ContainerContent.objects.create(
                 container=container,
                 produit=produit,
                 description=content_data.get('description', ''),
@@ -485,7 +499,14 @@ class AIService:
                 code_hs=content_data.get('code_hs', ''),
                 pays_origine=content_data.get('pays_origine', '')
             )
+            # —> Traitement des catégories fournies par l’IA
             
+            for cat_name in content_data.get('categories', []):
+                # On récupère ou crée la catégorie (sans parent, car l’IA ne renvoie que le nom)
+                
+                cat_obj, _ = Category.objects.get_or_create(name=cat_name)
+                cc.categories.add(cat_obj)
+    
             stats['container_contents_created'] += 1
             print(f"Created container content: {produit} for container {container.numero}")
             
