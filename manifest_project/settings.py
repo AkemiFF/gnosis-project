@@ -52,23 +52,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'manifest_project.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.getenv('DB_NAME', 'gnosis'),
-#         'USER': os.getenv('DB_USER', 'gnosis'),
-#         'PASSWORD': os.getenv('DB_PASSWORD', 'a8ssY7dddfRJFeVOso53CdJTDeEhWvri'),
-#         'HOST': os.getenv('DB_HOST', 'localhost'),
-#         'PORT': os.getenv('DB_PORT', '5432'),
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'gnosis'),
+        'USER': os.getenv('DB_USER', 'gnosis'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'a8ssY7dddfRJFeVOso53CdJTDeEhWvri'),
+        'HOST': os.getenv('DB_HOST', 'localhost'),
+        'PORT': os.getenv('DB_PORT', '5432'),
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
